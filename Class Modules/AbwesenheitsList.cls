@@ -11,6 +11,8 @@ Private sheet As Worksheet
 Private table As ListObject
 
 Private Const workerColumnWidth As Double = 4.5
+Private Const abteilungFontSize As Double = 8
+Private Const customFont As String = "Franklin Gothic Medium Cond"
 
 Private Sub Class_Initialize()
   Set sheet = ActiveWorkbook.Worksheets(GUrlaubsSheetName)
@@ -19,6 +21,8 @@ End Sub
 
 Public Sub WorkerAdd(worker As Mitarbeiter)
   Dim i As Integer
+  Dim workerColumn As Double
+  Dim workerRow As Double
   
   ' Add new column at last position
   table.ListColumns.Add
@@ -29,7 +33,28 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
     .Orientation = xlUpward
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
+    .Font.name = customFont
   End With
+  
+  ' Add also PCode, Vacation, etc
+  workerColumn = table.HeaderRowRange(1, table.ListColumns.Count).Column
+  workerRow = table.HeaderRowRange(1, table.ListColumns.Count).Row
+  With Cells(workerRow - 1, workerColumn)
+    .Value = worker.department
+    .Font.Size = abteilungFontSize
+  End With
+  With Cells(workerRow - 2, workerColumn)
+    .Value = worker.personalCode
+    .Orientation = xlUpward
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+    .Font.name = customFont
+  End With
+  With Cells(workerRow - 8, workerColumn)
+    .Value = worker.vacationTotal
+    .HorizontalAlignment = xlHAlignCenter
+  End With
+  
 End Sub
 
 Public Function WorkerSearch(workerPCode As String) As String
