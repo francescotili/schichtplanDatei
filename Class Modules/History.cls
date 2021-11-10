@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ' Declare the variables of the History object
 Public eventName As String
-Private currentUser As New user
+Private currentUser As New User
 Private sheet As Worksheet
 Private table As ListObject
 

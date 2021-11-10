@@ -93,7 +93,7 @@ Private Sub UserForm_Activate()
 End Sub
 
 Public Sub UpdateData()
-  Dim user As Mitarbeiter
+  Dim User As Mitarbeiter
   Dim x, i As Long
   Dim entryList() As String
   
