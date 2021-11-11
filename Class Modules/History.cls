@@ -13,16 +13,15 @@ Private currentUser As New User
 Private sheet As Worksheet
 Private table As ListObject
 
-Private Sub Init()
-    eventName = ""
-End Sub
-
-Public Function Save()
-  Dim entry As Variant
-  Dim i As Integer
-
+Private Sub Class_Initialize()
+  Me.eventName = ""
   Set sheet = ActiveWorkbook.Worksheets(GHistorySheetName)
   Set table = sheet.ListObjects.Item(GHistoryTableName)
+End Sub
+
+Public Sub Save()
+  Dim entry As Variant
+  Dim i As Integer
     
   ' Create array Value for History
   entry = Array( _
@@ -47,4 +46,19 @@ Public Function Save()
   ' Enable screen Updating and protection
   sheet.Protect Password:=GAdminPassword
   Application.ScreenUpdating = True
-End Function
+End Sub
+
+Public Sub Clean()
+  Dim i As Long
+  
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
+  ' Clean all the old entries
+  If table.ListRows.Count > GMaxHistoryEntries Then
+    For i = (GMaxHistoryEntries + 1) To table.ListRows.Count
+      table.ListRows(GMaxHistoryEntries + 1).Delete
+    Next i
+  End If
+End Sub
