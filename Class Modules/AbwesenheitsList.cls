@@ -33,30 +33,33 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
     .Orientation = xlUpward
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
-    .Font.name = customFont
   End With
-  
-  ' Add also PCode, Vacation, etc
-  workerColumn = table.HeaderRowRange(1, table.ListColumns.Count).Column
-  workerRow = table.HeaderRowRange(1, table.ListColumns.Count).Row
-  With Cells(workerRow - 1, workerColumn)
-    .Value = worker.department
-    .Font.Size = abteilungFontSize
-  End With
-  With Cells(workerRow - 2, workerColumn)
-    .Value = worker.personalCode
-    .Orientation = xlUpward
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-    .Font.name = customFont
-  End With
-  With Cells(workerRow - 8, workerColumn)
-    .Value = worker.vacationTotal
-    .HorizontalAlignment = xlHAlignCenter
-  End With
-  
 End Sub
 
 Public Function WorkerSearch(workerPCode As String) As String
 
 End Function
+
+Public Sub GenerateYear()
+  Dim startDate, endDate As Date
+  Dim numOfDays As Long
+  Dim i As Integer
+  
+  ' To be dynamicized - Format is M/d/yyyy
+  startDate = DateSerial(2021, 1, 1)
+  endDate = DateSerial(2021, 12, 31)
+  
+  ' Clear vacation table data
+  With table
+    If Not .DataBodyRange Is Nothing Then
+      .DataBodyRange.Delete
+    End If
+  End With
+  
+  ' Populate the rows with all the day of the year
+  numOfDays = DateDiff("d", startDate, endDate)
+  For i = 0 To numOfDays
+    table.ListRows.Add
+    table.DataBodyRange((i + 1), 1).Value = startDate + i
+  Next i
+End Sub
