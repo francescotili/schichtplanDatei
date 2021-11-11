@@ -7,6 +7,7 @@ Attribute VB_Name = "Globals"
 
 ' Global variables
 Public Const GAdminPassword As String = "franci2021"
+Public Const GMaxHistoryEntries As Integer = 15
 
 ' Table names
 Public Const GWorkerTableName As String = "MitarbeiterList"
@@ -18,4 +19,4 @@ Public Const GUrlaubsTableName As String = "UrlaubsplanTable"
 Public Const GUserSheetName As String = "Personal"
 Public Const GVacationsSheetName As String = "Feiertage"
 Public Const GHistorySheetName As String = "Historie"
-Public Const GUrlaubsSheetName As String = "Abwesenheitsplan"
+Public Const GUrlaubsSheetName As String = "AH_DB"

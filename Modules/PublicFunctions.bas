@@ -5,8 +5,9 @@ Attribute VB_Name = "PublicFunctions"
 ' file. They are available everywhere
 ' --------------------------------------------
 
-Sub TestHistory()
-  saveHistory ("Test event")
+Sub CleanHistory()
+  Set historyList = New history
+  historyList.Clean
 End Sub
 
 Sub MitarbeiterManage()
@@ -27,4 +28,9 @@ Public Function saveHistory(Optional eventName As String = "Unspecified event de
   newHistoryEntry.eventName = eventName
   newHistoryEntry.Save
 End Function
+
+Public Sub test()
+  Dim test As New AbwesenheitsList
+  test.GenerateYear
+End Sub
 
