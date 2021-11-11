@@ -115,6 +115,9 @@ Public Sub Save(newWorker As Mitarbeiter)
     Next j
     ' Update history
     saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefügt")
+    ' Add the new worker in the Vacation Plan
+    Dim vacationList As New AbwesenheitsList
+    vacationList.WorkerAdd newWorker
   Else ' User already exists
     For j = LBound(entry) To UBound(entry)
       table.DataBodyRange(existingWorker, (j + 1)).Value = entry(j)
@@ -131,6 +134,9 @@ Public Sub Save(newWorker As Mitarbeiter)
     .Header = xlYes
     .Apply
   End With
+  
+  ' Updates pivot tables
+  sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -159,6 +165,9 @@ Public Sub Delete(personalCode As String)
   If deletingWorker <> -1 Then ' Delete the row
     table.ListRows(deletingWorker).Delete
   End If
+  
+  ' Updates pivot tables
+  sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
