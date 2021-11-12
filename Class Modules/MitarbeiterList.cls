@@ -182,7 +182,9 @@ Public Sub Reset()
   sheet.Unprotect Password:=GAdminPassword
   
   ' Delete all the users
-  table.DataBodyRange.Delete
+  If Not table.DataBodyRange Is Nothing Then
+    table.DataBodyRange.Delete
+  End If
   
   ' Updates pivot tables
   sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
@@ -193,5 +195,5 @@ Public Sub Reset()
   
   ' Delete all user from Vacation List
   Dim vacationList As New AbwesenheitsList
-  vacationList.DeleteWorkers
+  vacationList.WorkerDelete
 End Sub
