@@ -31,7 +31,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
   CheckValidity
-  textboxDepartment.Value = "OPT6-RI"
+  textboxDepartment.Value = "OPT6"
 End Sub
 
 Private Sub Button_Save_Click()
