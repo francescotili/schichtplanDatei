@@ -102,11 +102,16 @@ Public Sub UpdateData()
   
   ' User list contains 3 column: PCode, Nachname, Vorname
   MitarbeiterList.ColumnCount = 3
-  ReDim entryList(1 To userList.data.Count, 1 To 3)
-  For i = 1 To userList.data.Count
-    entryList(i, 1) = userList.data.Item(i).personalCode
-    entryList(i, 2) = userList.data.Item(i).surname
-    entryList(i, 3) = userList.data.Item(i).name
-  Next
-  MitarbeiterList.list() = entryList
+  If userList.data.Count > 0 Then
+    ReDim entryList(1 To userList.data.Count, 1 To 3)
+    For i = 1 To userList.data.Count
+      entryList(i, 1) = userList.data.Item(i).personalCode
+      entryList(i, 2) = userList.data.Item(i).surname
+      entryList(i, 3) = userList.data.Item(i).name
+    Next
+    MitarbeiterList.list() = entryList
+  Else
+    Btn_MitarbeiterEdit.Enabled = False
+    Btn_MitarbeiterDelete.Enabled = False
+  End If
 End Sub

@@ -33,21 +33,23 @@ Public Sub Load()
   Dim i As Long
   Dim tempWorker As Mitarbeiter
   
-  workersData = table.DataBodyRange
+  If Not table.DataBodyRange Is Nothing Then
+    workersData = table.DataBodyRange
   
-  ' Parse data in Mitarbeiter objects
-  For i = LBound(workersData) To UBound(workersData)
-    Set tempWorker = New Mitarbeiter
-    tempWorker.Init _
-      CStr(workersData(i, 1)), _
-      CStr(workersData(i, 2)), _
-      CStr(workersData(i, 3)), _
-      CStr(workersData(i, 4)), _
-      CStr(workersData(i, 5)), _
-      CStr(workersData(i, 6))
+    ' Parse data in Mitarbeiter objects
+    For i = LBound(workersData) To UBound(workersData)
+      Set tempWorker = New Mitarbeiter
+      tempWorker.Init _
+        CStr(workersData(i, 1)), _
+        CStr(workersData(i, 2)), _
+        CStr(workersData(i, 3)), _
+        CStr(workersData(i, 4)), _
+        CStr(workersData(i, 5)), _
+        CStr(workersData(i, 6))
     
-    data.Add tempWorker
-  Next i
+      data.Add tempWorker
+    Next i
+  End If
 End Sub
 
 Public Sub Search(workerPCode As String)
@@ -172,4 +174,24 @@ Public Sub Delete(personalCode As String)
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
+End Sub
+
+Public Sub Reset()
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
+  ' Delete all the users
+  table.DataBodyRange.Delete
+  
+  ' Updates pivot tables
+  sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
+  
+  ' Delete all user from Vacation List
+  Dim vacationList As New AbwesenheitsList
+  vacationList.DeleteWorkers
 End Sub
