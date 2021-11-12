@@ -10,7 +10,7 @@ Attribute VB_Exposed = False
 Private sheet As Worksheet
 Private table As ListObject
 
-Private Const workerColumnWidth As Double = 4.5
+Private Const workerColumnWidth As Double = 4
 Private Const abteilungFontSize As Double = 8
 Private Const customFont As String = "Franklin Gothic Medium Cond"
 Private Const startWorkerColumn As Integer = 2
@@ -71,6 +71,9 @@ Public Sub GenerateYear(year As Integer)
     table.ListRows.Add
     table.DataBodyRange((i + 1), 1).Value = startDate + i
   Next i
+  
+  ' Save history entry
+  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -84,15 +87,18 @@ Public Sub WorkerDelete(Optional personalCode As String = "null")
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   
-  If personalCode = "null" Then
-    ' Delete all workers column
+  If personalCode = "null" Then ' Delete all workers column
     If table.ListColumns.Count < startWorkerColumn Then
       For i = startWorkerColumn To table.ListColumns.Count
         table.ListColumns(startWorkerColumn).Delete
       Next i
     End If
-  Else
-    ' Search for user
+  Else ' Search for user and delete
+    For i = startWorkerColumn To table.DataBodyRange.Columns.Count
+      If table.HeaderRowRange(1, i).Value = personalCode Then
+        table.ListColumns(i).Delete
+      End If
+    Next i
   End If
 
   ' Enable screen Updating and protection
