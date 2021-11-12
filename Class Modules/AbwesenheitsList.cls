@@ -33,7 +33,7 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
   table.ListColumns.Add
   ' Change column header
   With table.HeaderRowRange(1, table.ListColumns.Count)
-    .Value = worker.name & " " & worker.surname
+    .Value = worker.personalCode
     .ColumnWidth = workerColumnWidth
     .Orientation = xlUpward
     .HorizontalAlignment = xlHAlignCenter
@@ -77,17 +77,23 @@ Public Sub GenerateYear(year As Integer)
   sheet.Protect Password:=GAdminPassword
 End Sub
 
-Public Sub DeleteWorkers()
+Public Sub WorkerDelete(Optional personalCode As String = "null")
   Dim i As Double
   
   ' Disable screen Updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   
-  ' Delete all workers column
-  For i = startWorkerColumn To table.ListColumns.Count
-    table.ListColumns(startWorkerColumn).Delete
-  Next i
+  If personalCode = "null" Then
+    ' Delete all workers column
+    If table.ListColumns.Count < startWorkerColumn Then
+      For i = startWorkerColumn To table.ListColumns.Count
+        table.ListColumns(startWorkerColumn).Delete
+      Next i
+    End If
+  Else
+    ' Search for user
+  End If
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
