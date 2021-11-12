@@ -13,6 +13,7 @@ Private table As ListObject
 Private Const workerColumnWidth As Double = 4.5
 Private Const abteilungFontSize As Double = 8
 Private Const customFont As String = "Franklin Gothic Medium Cond"
+Private Const startWorkerColumn As Integer = 2
 
 Private Sub Class_Initialize()
   Set sheet = ActiveWorkbook.Worksheets(GUrlaubsSheetName)
@@ -24,6 +25,10 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
   Dim workerColumn As Double
   Dim workerRow As Double
   
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
   ' Add new column at last position
   table.ListColumns.Add
   ' Change column header
@@ -34,20 +39,24 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
   End With
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 End Sub
 
-Public Function WorkerSearch(workerPCode As String) As String
-
-End Function
-
-Public Sub GenerateYear()
+Public Sub GenerateYear(year As Integer)
   Dim startDate, endDate As Date
   Dim numOfDays As Long
   Dim i As Integer
   
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
   ' To be dynamicized - Format is M/d/yyyy
-  startDate = DateSerial(2021, 1, 1)
-  endDate = DateSerial(2021, 12, 31)
+  startDate = DateSerial(year, 1, 1)
+  endDate = DateSerial(year, 12, 31)
   
   ' Clear vacation table data
   With table
@@ -62,4 +71,25 @@ Public Sub GenerateYear()
     table.ListRows.Add
     table.DataBodyRange((i + 1), 1).Value = startDate + i
   Next i
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
+End Sub
+
+Public Sub DeleteWorkers()
+  Dim i As Double
+  
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
+  ' Delete all workers column
+  For i = startWorkerColumn To table.ListColumns.Count
+    table.ListColumns(startWorkerColumn).Delete
+  Next i
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 End Sub
