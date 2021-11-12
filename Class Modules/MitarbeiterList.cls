@@ -170,6 +170,10 @@ Public Sub Delete(personalCode As String)
   
   ' Updates pivot tables
   sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
+  
+  ' Delete worker in VacationList
+  Dim vacationList As New AbwesenheitsList
+  vacationList.WorkerDelete personalCode
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -188,6 +192,9 @@ Public Sub Reset()
   
   ' Updates pivot tables
   sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
+  
+  ' Save history entry
+  saveHistory ("DIE MITARBEITERLISTE WURDE GELÖSCHT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
