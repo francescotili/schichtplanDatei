@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ResetFile 
    Caption         =   "Datei zurücksetzen"
-   ClientHeight    =   3720
+   ClientHeight    =   3975
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   4050
@@ -22,6 +22,12 @@ Private Sub JahrTextbox_Change()
 End Sub
 
 Private Sub Proceed_Click()
+  ' Generate new year on shifts list
+  If Shifts_Check = True Then
+    Dim shiftList As New SchichtList
+    shiftList.GenerateYear JahrTextbox.Value ' Sanitized in JahrTextbox_Change()
+  End If
+  
   ' Generate new year on vacation list
   If Vacation_Check = True Then
     Dim vacationList As New AbwesenheitsList
@@ -39,4 +45,5 @@ End Sub
 
 Private Sub UserForm_Initialize()
   Vacation_Check.Value = True
+  Shifts_Check.Value = True
 End Sub
