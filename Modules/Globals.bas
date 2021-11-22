@@ -12,11 +12,13 @@ Public Const GMaxHistoryEntries As Integer = 15
 ' Table names
 Public Const GWorkerTableName As String = "MitarbeiterList"
 Public Const GVacationsTableName As String = "FeiertageList"
-Public Const GHistoryTableName As String = "History"
-Public Const GUrlaubsTableName As String = "UrlaubsplanTable"
+Public Const GHistoryTableName As String = "Historie"
+Public Const GAbsencesTableName As String = "UrlaubsplanDB"
+Public Const GShiftsTableName As String = "SchichtplanDB"
 
 ' Sheet names
 Public Const GUserSheetName As String = "Personal"
 Public Const GVacationsSheetName As String = "Feiertage"
 Public Const GHistorySheetName As String = "Historie"
-Public Const GUrlaubsSheetName As String = "AH_DB"
+Public Const GAbsencesSheetName As String = "AH_DB"
+Public Const GShiftsSheetName As String = "SP_DB"

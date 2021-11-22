@@ -16,8 +16,8 @@ Private Const customFont As String = "Franklin Gothic Medium Cond"
 Private Const startWorkerColumn As Integer = 2
 
 Private Sub Class_Initialize()
-  Set sheet = ActiveWorkbook.Worksheets(GUrlaubsSheetName)
-  Set table = sheet.ListObjects.Item(GUrlaubsTableName)
+  Set sheet = ActiveWorkbook.Worksheets(GAbsencesSheetName)
+  Set table = sheet.ListObjects.Item(GAbsencesTableName)
 End Sub
 
 Public Sub WorkerAdd(worker As Mitarbeiter)
@@ -54,7 +54,7 @@ Public Sub GenerateYear(year As Integer)
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   
-  ' To be dynamicized - Format is M/d/yyyy
+  ' Generate start und end date from form
   startDate = DateSerial(year, 1, 1)
   endDate = DateSerial(year, 12, 31)
   
