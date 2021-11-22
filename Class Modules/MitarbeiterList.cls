@@ -14,7 +14,6 @@ Attribute VB_Exposed = False
 ' --------------------------------------------
 
 Public data As Collection
-'Public user As Mitarbeiter
 Public worker As Mitarbeiter
 Private sheet As Worksheet
 Private table As ListObject
@@ -138,7 +137,7 @@ Public Sub Save(newWorker As Mitarbeiter)
   End With
   
   ' Updates pivot tables
-  sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
+  ' sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
