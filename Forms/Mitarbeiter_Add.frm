@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Private Sub textboxName_Change()
   ' When the name changes, it changes also the visualisation name
   textboxVisNameOverride.Value = Left(textboxName.Value, 1) & ". " & textboxSurname.Value
