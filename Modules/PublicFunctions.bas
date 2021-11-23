@@ -42,5 +42,8 @@ Public Function saveHistory(Optional eventName As String = "Unspecified event de
 End Function
 
 Public Sub test()
-  MsgBox "Click!"
+'  MsgBox "Click!"
+  Dim shiftList As New SchichtList
+  shiftList.Load
+  
 End Sub
