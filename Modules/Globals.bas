@@ -23,3 +23,10 @@ Public Const GHistorySheetName As String = "Historie"
 Public Const GAbsencesSheetName As String = "AH_DB"
 Public Const GShiftsSheetName As String = "SP_DB"
 Public Const GWeekModifySheetName As String = "Bearbeiten"
+
+' Enums
+Public Enum WeekStatus
+ Emtpy ' The week is not yet initialize AKA no data contained
+ Normal ' The week is normal, every weekday has the same plan (except Weekend)
+ Custom ' The is not normal, every day has different values
+End Enum

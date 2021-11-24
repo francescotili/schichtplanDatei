@@ -9,12 +9,13 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 ' Declare properties of SchichtDay class
 Public shiftDate As Date
-Public shiftName, shiftCode As String
+Public shiftStatus As WeekStatus
+Public shiftCode As String
 Private workPlaces(32) As String ' You cannot have a Public array in a Class Module, sadly
 
-Public Sub Init(shiftDate As Date, shiftName As String)
+Public Sub Init(shiftDate As Date, shiftStatus As WeekStatus, shiftName As String)
   Me.shiftDate = shiftDate
-  Me.shiftName = shiftName
+  Me.shiftStatus = shiftStatus
   Me.shiftCode = year(shiftDate) & Format(Month(shiftDate), "00") & Format(Day(shiftDate), "00") & shiftName
 End Sub
 

@@ -45,7 +45,7 @@ Public Sub Load()
     For i = LBound(shiftsData) To UBound(shiftsData)
       ' Initialize SchichtDay object with read data
       Set tempShift = New SchichtDay
-      tempShift.Init DateValue(shiftsData(i, 1)), CStr(shiftsData(i, 2))
+      tempShift.Init DateValue(shiftsData(i, 1)), CLng(shiftsData(i, 2)), CStr(shiftsData(i, 3))
       
       ' Create array of workplaces for that day
       For j = 4 To 36 ' Column for every workplace
@@ -132,13 +132,13 @@ Public Sub GenerateYear(passedYear As Integer)
     For j = 1 To 4 ' For the 4 shifts of the day
       table.ListRows.Add
       table.DataBodyRange((4 * i + j), 1).Value = startDate + i
-      table.DataBodyRange((4 * i + j), 2) = Right(shiftCodes(j - 1), 1)
+      table.DataBodyRange((4 * i + j), 2) = WeekStatus.Emtpy
       table.DataBodyRange((4 * i + j), 3) = shiftCodes(j - 1)
     Next j
   Next i
   
   ' Save history entry
-  saveHistory ("DER SCHICHTPLAN WURDE ZURÃœCKGESETZT")
+  saveHistory ("DER SCHICHTPLAN WURDE ZURÜCKGESETZT")
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
