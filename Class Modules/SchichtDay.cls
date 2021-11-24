@@ -25,7 +25,7 @@ Public Sub Populate(shiftData() As String)
   Next i
 End Sub
 
-Public Property Get shiftPlan() As String
+Public Property Get shiftPlan() As String()
   shiftPlan = workPlaces
 End Property
 
