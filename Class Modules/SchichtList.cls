@@ -55,7 +55,7 @@ Public Sub Load()
       data.Add tempShift
     Next i
     
-    Debug.Print data.Item(1).workPlace(2)
+    'Debug.Print data.Item(1).workPlace(2)
   End If
 End Sub
 
@@ -67,15 +67,8 @@ End Sub
 Public Sub GenerateYear(passedYear As Integer)
   Dim startDate, endDate As Date
   Dim numOfDays As Long
-  Dim shiftNames(3) As String
-  Dim shiftCode As String
-  Dim i, j As Integer
-  
-  ' Define names of shifts
-  shiftNames(0) = "X"
-  shiftNames(1) = "F"
-  shiftNames(2) = "S"
-  shiftNames(3) = "N"
+  Dim shiftCodes() As String
+  Dim i, j As Double
   
   ' Disable screen Updating and protection
   Application.ScreenUpdating = False
@@ -95,19 +88,41 @@ Public Sub GenerateYear(passedYear As Integer)
   ' Populate the rows with all the day of the year
   numOfDays = DateDiff("d", startDate, endDate)
   For i = 0 To numOfDays
+    shiftCodes = generateShiftsCode(startDate + i)
     For j = 1 To 4 ' For the 4 shifts of the day
       table.ListRows.Add
       table.DataBodyRange((4 * i + j), 1).Value = startDate + i
-      shiftCode = year(startDate + i) & Format(Month(startDate + i), "00") & Format(Day(startDate + i), "00") & shiftNames(j - 1)
-      table.DataBodyRange((4 * i + j), 2) = shiftNames(j - 1)
-      table.DataBodyRange((4 * i + j), 3) = shiftCode
+      table.DataBodyRange((4 * i + j), 2) = Right(shiftCodes(j - 1), 1)
+      table.DataBodyRange((4 * i + j), 3) = shiftCodes(j - 1)
     Next j
   Next i
   
   ' Save history entry
-  saveHistory ("DER SCHICHTPLAN WURDE ZURÜCKGESETZT")
+  saveHistory ("DER SCHICHTPLAN WURDE ZURÃœCKGESETZT")
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
 End Sub
+
+Private Function generateShiftsCode(inputDate As Date) As String()
+  Dim shiftNames(3) As String
+  Dim shiftCodes(3) As String
+  Dim i As Double
+
+  ' Define names of shifts
+  shiftNames(0) = "X"
+  shiftNames(1) = "F"
+  shiftNames(2) = "S"
+  shiftNames(3) = "N"
+  
+  For i = 0 To 3
+    shiftCodes(i) = _
+      year(inputDate) & _
+      Format(Month(inputDate), "00") & _
+      Format(Day(inputDate), "00") & _
+      shiftNames(i)
+  Next i
+  
+  generateShiftsCode = shiftCodes
+End Function
