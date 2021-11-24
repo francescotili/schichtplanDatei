@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ResetFile 
-   Caption         =   "Datei zurücksetzen"
+   Caption         =   "Datei zurï¿½cksetzen"
    ClientHeight    =   3975
    ClientLeft      =   120
    ClientTop       =   465
@@ -22,6 +22,8 @@ Private Sub JahrTextbox_Change()
 End Sub
 
 Private Sub Proceed_Click()
+  Application.StatusBar = "Datei wurde zurÃ¼ckgesetzt. Bitte warten!"
+
   ' Generate new year on shifts list
   If Shifts_Check = True Then
     Dim shiftList As New SchichtList
@@ -40,6 +42,7 @@ Private Sub Proceed_Click()
     workersList.Reset
   End If
   
+  Application.StatusBar = False
   Unload Me
 End Sub
 
