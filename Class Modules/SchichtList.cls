@@ -14,6 +14,7 @@ Attribute VB_Exposed = False
 ' --------------------------------------------
 
 Public data As Collection
+Public weekData As Collection
 Private sheet As Worksheet
 Private table As ListObject
 
@@ -63,6 +64,45 @@ End Sub
 '  ' Save or modify the passed week
 '
 'End Sub
+
+Public Sub WeekRead(weekNumber As Double)
+  Dim startDate, endDate As Date
+  Dim numOfDay As Long
+  Dim tempShiftCodes() As String
+  Set shiftCodes = CreateObject("System.Collections.ArrayList")
+  Dim shiftYear As Integer
+  Dim i, j As Double
+  Set weekData = New Collection
+  
+  ' Load shifts data from table
+  Me.Load
+  
+  ' Define the year, reading the first date of shifts database
+  shiftYear = year(data.Item(1).shiftDate)
+  
+  ' Generate start and end dates from passed week number
+  startDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, -3))
+  endDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, 3))
+  
+  ' Generate shiftCodes to search and read
+  numOfDay = DateDiff("d", startDate, endDate)
+  For i = 0 To numOfDay
+    tempShiftCodes = generateShiftsCode(startDate + i)
+    For j = LBound(tempShiftCodes) To UBound(tempShiftCodes)
+      shiftCodes.Add tempShiftCodes(j)
+    Next j
+  Next i
+  
+  ' Filter the data with the requested shifts and populate weekData collection
+  For i = 1 To data.Count
+    For j = 1 To shiftCodes.Count
+      If shiftCodes(j - 1) = data.Item(i).shiftCode Then
+        weekData.Add data.Item(i)
+      End If
+    Next j
+  Next i
+End Sub
+
 
 Public Sub GenerateYear(passedYear As Integer)
   Dim startDate, endDate As Date
