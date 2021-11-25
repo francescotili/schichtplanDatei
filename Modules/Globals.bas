@@ -26,7 +26,11 @@ Public Const GWeekModifySheetName As String = "Bearbeiten"
 
 ' Enums
 Public Enum WeekStatus
- Emtpy ' The week is not yet initialize AKA no data contained
- Normal ' The week is normal, every weekday has the same plan (except Weekend)
- Custom ' The is not normal, every day has different values
+  ' The week is not yet initialized AKA no data contained
+  Emtpy
+  ' The workdays are normal (all the same plan) and there can
+  ' be shifts planned in the weekend
+  Normal
+  ' The week is not normal, every day can have different value
+  Custom
 End Enum
