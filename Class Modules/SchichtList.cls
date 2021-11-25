@@ -35,9 +35,6 @@ Public Sub Load()
   Dim tempShift As SchichtDay
   Dim workPlace(32) As String
 
-  Set tempShift = New SchichtDay
-  tempShift.Init DateSerial(2021, 11, 23), "F"
-
   If Not table.DataBodyRange Is Nothing Then
     shiftsData = table.DataBodyRange
 
@@ -45,7 +42,7 @@ Public Sub Load()
     For i = LBound(shiftsData) To UBound(shiftsData)
       ' Initialize SchichtDay object with read data
       Set tempShift = New SchichtDay
-      tempShift.Init DateValue(shiftsData(i, 1)), CLng(shiftsData(i, 2)), CStr(shiftsData(i, 3))
+      tempShift.Init DateValue(shiftsData(i, 1)), CLng(shiftsData(i, 2)), Right(CStr(shiftsData(i, 3)), 1)
       
       ' Create array of workplaces for that day
       For j = 4 To 36 ' Column for every workplace
@@ -56,7 +53,7 @@ Public Sub Load()
       data.Add tempShift
     Next i
     
-    'Debug.Print data.Item(1).workPlace(2)
+    'Debug.Print data.Item(1).shiftDate
   End If
 End Sub
 
