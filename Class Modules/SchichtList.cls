@@ -52,8 +52,6 @@ Public Sub Load()
       
       data.Add tempShift
     Next i
-    
-    'Debug.Print data.Item(1).shiftDate
   End If
 End Sub
 
@@ -135,7 +133,7 @@ Public Sub GenerateYear(passedYear As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER SCHICHTPLAN WURDE ZUR�CKGESETZT")
+  saveHistory ("DER SCHICHTPLAN WURDE ZURÜCKGESETZT")
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
