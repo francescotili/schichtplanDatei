@@ -21,23 +21,23 @@ End Sub
 
 Public Sub WeekDataLoad()
   Dim shiftList As New SchichtList
-  Dim i As Long
+  Dim i, j As Long
   Dim weekNumber As Integer
+  Dim stanzStartRow, qualiStartRow, lagerStartRow, trommStartRow, bueroStartRow, galvaStartRow, instStartRow As Integer
+  Dim shiftsStartCol As Integer
   
   ' Get the week number
   weekNumber = CInt(Range("Sh2_WeekToLoadCell").Value)
   
   ' Set variable for the view
-'  stanzereiStartCell = "7"
-'  qualitatStartCell = "38"
-'  lagerStartCell = "45"
-'  trommlereiStartCell = "48"
-'  galvanikStartCell = "52"
-'  instandsetzStartCell = "71"
-'  XShiftCol = "D"
-'  FShiftCol = "E"
-'  SShiftCol = "F"
-'  NShiftCol = "G"
+  stanzStartRow = 7
+  qualiStartRow = 41
+  lagerStartRow = 48
+  trommStartRow = 51
+  bueroStartRow = 55
+  galvaStartRow = 71
+  instaStartRow = 90
+  shiftStartCol = 7 'G
   
   ' Get the week data
   shiftList.WeekRead (weekNumber)
@@ -51,6 +51,13 @@ Public Sub WeekDataLoad()
     Case WeekStatus.Custom
       SetCustomMode
   End Select
+  
+  ' Stanzerei
+  For i = 1 To 11
+    For j = 1 To 4
+      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(shiftList.weekData.Item(j).workPlace(i - 1))
+    Next j
+  Next i
 End Sub
 
 Public Sub ToggleMode()
