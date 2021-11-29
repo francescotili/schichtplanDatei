@@ -78,8 +78,8 @@ Public Sub WeekRead(weekNumber As Double)
   shiftYear = year(data.Item(1).shiftDate)
   
   ' Generate start and end dates from passed week number
-  startDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, -3))
-  endDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, 3))
+  startDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, -4))
+  endDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, 2))
   
   ' Generate shiftCodes to search and read
   numOfDay = DateDiff("d", startDate, endDate)
@@ -135,7 +135,7 @@ Public Sub GenerateYear(passedYear As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER SCHICHTPLAN WURDE ZURÜCKGESETZT")
+  saveHistory ("DER SCHICHTPLAN WURDE ZURï¿½CKGESETZT")
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
