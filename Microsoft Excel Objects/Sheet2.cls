@@ -14,9 +14,24 @@ Attribute VB_Exposed = True
 ' --------------------------------------------
 Public sheet As Worksheet
 
+Private isMoChecked, isDiChecked, isMiChecked, isDoChecked, isFrChecked As Range
+Private nextDayBtn, prevDayBtn As Shape
+Private weekStatusCell, actualTagCell As Range
+
 Private Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
-
+  
+  Set isMoChecked = Range("Sh2_IsMoChecked")
+  Set isDiChecked = Range("Sh2_IsDiChecked")
+  Set isMiChecked = Range("Sh2_IsMiChecked")
+  Set isDoChecked = Range("Sh2_IsDoChecked")
+  Set isFrChecked = Range("Sh2_IsFrChecked")
+  
+  Set nextDayBtn = Me.sheet.Shapes("Sh2_NextDayBtn")
+  Set prevDayBtn = Me.sheet.Shapes("Sh2_PreviousDayBtn")
+  
+  Set weekStatusCell = Range("Sh2_WeekStatusCell")
+  Set actualTagCell = Range("Sh2_ModifyingTagLabel")
 End Sub
 
 Public Sub WeekDataLoad()
@@ -115,7 +130,7 @@ Private Sub Populate(weekData As Collection, weekDay As Integer)
 End Sub
 
 Public Sub ToggleMode()
-  Select Case Range("Sh2_WeekStatusCell").Value
+  Select Case weekStatusCell.Value
     Case WeekStatus.Emtpy
       SetNormalMode
     Case WeekStatus.Normal
@@ -126,83 +141,83 @@ Public Sub ToggleMode()
 End Sub
 
 Private Sub SetNormalMode()
-  Range("Sh2_WeekStatusCell").Value = WeekStatus.Normal
-  Range("Sh2_ModifyingTagLabel").Value = "MONTAG bis FREITAG"
-  Me.sheet.Shapes("Sh2_PreviousDayBtn").Visible = msoFalse
-  Me.sheet.Shapes("Sh2_NextDayBtn").Visible = msoFalse
-  Me.sheet.Shapes("Sh2_MoCheck").OLEFormat.Object.Value = 1 ' -4146 is unchecked
-  Me.sheet.Shapes("Sh2_DiCheck").OLEFormat.Object.Value = 1
-  Me.sheet.Shapes("Sh2_MiCheck").OLEFormat.Object.Value = 1
-  Me.sheet.Shapes("Sh2_DoCheck").OLEFormat.Object.Value = 1
-  Me.sheet.Shapes("Sh2_FrCheck").OLEFormat.Object.Value = 1
+  weekStatusCell.Value = WeekStatus.Normal
+  actualTagCell.Value = "MONTAG bis FREITAG"
+  prevDayBtn.Visible = msoFalse
+  nextDayBtn.Visible = msoFalse
+  isMoChecked.Value = True
+  isDiChecked.Value = True
+  isMiChecked.Value = True
+  isDoChecked.Value = True
+  isFrChecked.Value = True
 End Sub
 
 Private Sub SetCustomMode()
-  Range("Sh2_WeekStatusCell").Value = WeekStatus.Custom
-  Range("Sh2_ModifyingTagLabel").Value = "MONTAG"
-  Me.sheet.Shapes("Sh2_PreviousDayBtn").Visible = msoFalse
-  Me.sheet.Shapes("Sh2_NextDayBtn").Visible = msoTrue
-  Range("Sh2_IsMoChecked").Value = True
-  Range("Sh2_IsDiChecked").Value = False
-  Range("Sh2_IsMiChecked").Value = False
-  Range("Sh2_IsDoChecked").Value = False
-  Range("Sh2_IsFrChecked").Value = False
+  weekStatusCell.Value = WeekStatus.Custom
+  actualTagCell.Value = "MONTAG"
+  prevDayBtn.Visible = msoFalse
+  nextDayBtn.Visible = msoTrue
+  isMoChecked.Value = True
+  isDiChecked.Value = False
+  isMiChecked.Value = False
+  isDoChecked.Value = False
+  isFrChecked.Value = False
 End Sub
 
 Private Sub SetEmptyMode()
-  Range("Sh2_WeekStatusCell").Value = WeekStatus.Emtpy
-  Range("Sh2_ModifyingTagLabel").Value = "MONTAG bis FREITAG"
-  Me.sheet.Shapes("Sh2_PreviousDayBtn").Visible = msoFalse
-  Me.sheet.Shapes("Sh2_NextDayBtn").Visible = msoFalse
-  Range("Sh2_IsMoChecked").Value = True
-  Range("Sh2_IsDiChecked").Value = True
-  Range("Sh2_IsMiChecked").Value = True
-  Range("Sh2_IsDoChecked").Value = True
-  Range("Sh2_IsFrChecked").Value = True
+  weekStatusCell.Value = WeekStatus.Emtpy
+  actualTagCell.Value = "MONTAG bis FREITAG"
+  prevDayBtn.Visible = msoFalse
+  nextDayBtn.Visible = msoFalse
+  isMoChecked.Value = True
+  isDiChecked.Value = True
+  isMiChecked.Value = True
+  isDoChecked.Value = True
+  isFrChecked.Value = True
 End Sub
 
 Public Sub GoToNextDay()
-  Select Case Range("Sh2_ModifyingTagLabel").Value
+  Select Case actualTagCell.Value
     Case "MONTAG"
-      Range("Sh2_ModifyingTagLabel").Value = "DIENSTAG"
-      Range("Sh2_IsMoChecked").Value = False
-      Range("Sh2_IsDiChecked").Value = True
-      Me.sheet.Shapes("Sh2_PreviousDayBtn").Visible = msoTrue
+      actualTagCell.Value = "DIENSTAG"
+      isMoChecked.Value = False
+      isDiChecked.Value = True
+      prevDayBtn.Visible = msoTrue
     Case "DIENSTAG"
-      Range("Sh2_ModifyingTagLabel").Value = "MITTWOCH"
-      Range("Sh2_IsDiChecked").Value = False
-      Range("Sh2_IsMiChecked").Value = True
+      actualTagCell.Value = "MITTWOCH"
+      isDiChecked.Value = False
+      isMiChecked.Value = True
     Case "MITTWOCH"
-      Range("Sh2_ModifyingTagLabel").Value = "DONNERSTAG"
-      Range("Sh2_IsMiChecked").Value = False
-      Range("Sh2_IsDoChecked").Value = True
+      actualTagCell.Value = "DONNERSTAG"
+      isMiChecked.Value = False
+      isDoChecked.Value = True
     Case "DONNERSTAG"
-      Range("Sh2_ModifyingTagLabel").Value = "FREITAG"
-      Range("Sh2_IsDoChecked").Value = False
-      Range("Sh2_IsFrChecked").Value = True
-      Me.sheet.Shapes("Sh2_NextDayBtn").Visible = msoFalse
+      actualTagCell.Value = "FREITAG"
+      isDoChecked.Value = False
+      isFrChecked.Value = True
+      nextDayBtn.Visible = msoFalse
   End Select
 End Sub
 
 Public Sub GoToPreviousDay()
-  Select Case Range("Sh2_ModifyingTagLabel").Value
+  Select Case actualTagCell.Value
     Case "FREITAG"
-      Range("Sh2_ModifyingTagLabel").Value = "DONNERSTAG"
-      Range("Sh2_IsFrChecked").Value = False
-      Range("Sh2_IsDoChecked").Value = True
-      Me.sheet.Shapes("Sh2_NextDayBtn").Visible = msoTrue
+      actualTagCell.Value = "DONNERSTAG"
+      isFrChecked.Value = False
+      isDoChecked.Value = True
+      nextDayBtn.Visible = msoTrue
     Case "DONNERSTAG"
-      Range("Sh2_ModifyingTagLabel").Value = "MITTWOCH"
-      Range("Sh2_IsDoChecked").Value = False
-      Range("Sh2_IsMiChecked").Value = True
+      actualTagCell.Value = "MITTWOCH"
+      isDoChecked.Value = False
+      isMiChecked.Value = True
     Case "MITTWOCH"
-      Range("Sh2_ModifyingTagLabel").Value = "DIENSTAG"
-      Range("Sh2_IsMiChecked").Value = False
-      Range("Sh2_IsDiChecked").Value = True
+      actualTagCell.Value = "DIENSTAG"
+      isMiChecked.Value = False
+      isDiChecked.Value = True
     Case "DIENSTAG"
-      Range("Sh2_ModifyingTagLabel").Value = "MONTAG"
-      Range("Sh2_IsDiChecked").Value = False
-      Range("Sh2_IsMoChecked").Value = True
-      Me.sheet.Shapes("Sh2_PreviousDayBtn").Visible = msoFalse
+      actualTagCell.Value = "MONTAG"
+      isDiChecked.Value = False
+      isMoChecked.Value = True
+      prevDayBtn.Visible = msoFalse
   End Select
 End Sub
