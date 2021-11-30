@@ -41,7 +41,8 @@ Public Sub WeekDataLoad()
   ' Worflow based on week status (read at monday)
   Select Case shiftList.weekData.Item(1).shiftStatus
     Case WeekStatus.Emtpy
-      SetEmptyMode
+      'SetEmptyMode
+      SetNormalMode
     Case WeekStatus.Normal
       SetNormalMode
     Case WeekStatus.Custom
@@ -132,8 +133,8 @@ End Sub
 
 Public Sub ToggleMode()
   Select Case weekStatusCell.Value
-    Case WeekStatus.Emtpy
-      SetNormalMode
+'    Case WeekStatus.Emtpy
+'      SetNormalMode
     Case WeekStatus.Normal
       SetCustomMode
     Case WeekStatus.Custom
@@ -164,31 +165,13 @@ Private Sub SetEmptyMode()
 End Sub
 
 Public Sub GoToNextDay()
-  Select Case activeDayCell.Value
-    Case 1 'Montag > Dienstag
-      activeDayCell.Value = 2
-      prevDayBtn.Visible = msoTrue
-    Case 2 'Dienstag > Mittwoch
-      activeDayCell.Value = 3
-    Case 3 'Mittwoch > Donnerstag
-      activeDayCell.Value = 4
-    Case 4 'Donnerstag > Freitag
-      activeDayCell.Value = 5
-      nextDayBtn.Visible = msoFalse
-  End Select
+activeDayCell.Value = activeDayCell.Value + 1
+If activeDayCell.Value > 1 Then prevDayBtn.Visible = msoTrue
+If activeDayCell.Value = 5 Then nextDayBtn.Visible = msoFalse
 End Sub
 
 Public Sub GoToPreviousDay()
-  Select Case activeDayCell.Value
-    Case 5 'Freitag > Donnerstag
-      activeDayCell.Value = 4
-      nextDayBtn.Visible = msoTrue
-    Case 4 'Donnerstag > Mittwoch
-      activeDayCell.Value = 3
-    Case 3 'Mittwoch > Dienstag
-      activeDayCell.Value = 2
-    Case 2 'Dienstag > Montag
-      activeDayCell.Value = 1
-      prevDayBtn.Visible = msoFalse
-  End Select
+activeDayCell.Value = activeDayCell.Value - 1
+If activeDayCell.Value = 1 Then prevDayBtn.Visible = msoFalse
+If activeDayCell.Value < 5 Then nextDayBtn.Visible = msoTrue
 End Sub
