@@ -13,6 +13,7 @@ Attribute VB_Exposed = True
 ' Sheet2 (Bearbeiten)
 ' --------------------------------------------
 Public sheet As Worksheet
+Private weekData As Collection
 
 Private nextDayBtn, prevDayBtn As Shape
 Private weekStatusCell, activeDayCell As Range
@@ -37,9 +38,10 @@ Public Sub WeekDataLoad()
   
   ' Get the week data
   shiftList.WeekRead (weekNumber)
+  Set weekData = shiftList.weekData
   
   ' Worflow based on week status (read at monday)
-  Select Case shiftList.weekData.Item(1).shiftStatus
+  Select Case weekData.Item(1).shiftStatus
     Case WeekStatus.Emtpy
       'SetEmptyMode
       SetNormalMode
@@ -48,10 +50,10 @@ Public Sub WeekDataLoad()
     Case WeekStatus.Custom
       SetCustomMode
   End Select
-  Populate shiftList.weekData, 1 ' Monday
+  Populate 1 ' Monday
 End Sub
 
-Private Sub Populate(weekData As Collection, weekDay As Integer)
+Private Sub Populate(weekDay As Integer)
   ' This function take the day of the week and populate the various
   ' sections of the Worksheet.
   ' Warning: before calling this function, please load and pass the right data!
