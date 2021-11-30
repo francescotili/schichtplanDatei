@@ -18,7 +18,7 @@ Private isMoChecked, isDiChecked, isMiChecked, isDoChecked, isFrChecked As Range
 Private nextDayBtn, prevDayBtn As Shape
 Private weekStatusCell, actualTagCell As Range
 
-Private Sub Worksheet_Activate()
+Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
   
   Set isMoChecked = Range("Sh2_IsMoChecked")
