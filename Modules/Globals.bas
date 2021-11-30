@@ -34,3 +34,15 @@ Public Enum WeekStatus
   ' The week is not normal, every day can have different value
   Custom
 End Enum
+
+Public Enum WeekDay
+  ' No weekDay specified
+  Unknown
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  'Sathurday
+  'Sunday
+End Enum

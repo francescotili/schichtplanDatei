@@ -41,7 +41,7 @@ Public Sub WeekDataLoad()
   Set weekData = shiftList.weekData
   
   ' Worflow based on week status (read at monday)
-  Select Case weekData.Item(1).shiftStatus
+  Select Case weekData.Item(WeekDay.Monday).shiftStatus
     Case WeekStatus.Emtpy
       'SetEmptyMode
       SetNormalMode
@@ -50,10 +50,10 @@ Public Sub WeekDataLoad()
     Case WeekStatus.Custom
       SetCustomMode
   End Select
-  Populate 1 ' Monday
+  Populate WeekDay.Monday
 End Sub
 
-Private Sub Populate(weekDay As Integer)
+Private Sub Populate(day As WeekDay)
   ' This function take the day of the week and populate the various
   ' sections of the Worksheet.
   ' Warning: before calling this function, please load and pass the right data!
@@ -74,7 +74,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 11
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -84,7 +84,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 13
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -94,7 +94,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 15
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -104,7 +104,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 20
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -114,7 +114,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 26
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1)).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -124,7 +124,7 @@ Private Sub Populate(weekDay As Integer)
   endWorkPlace = 33
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1)).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -146,7 +146,7 @@ End Sub
 
 Private Sub SetNormalMode()
   weekStatusCell.Value = WeekStatus.Normal
-  activeDayCell.Value = 0
+  activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
   
@@ -154,26 +154,29 @@ End Sub
 
 Private Sub SetCustomMode()
   weekStatusCell.Value = WeekStatus.Custom
-  activeDayCell.Value = 1
+  activeDayCell.Value = WeekDay.Monday
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoTrue
 End Sub
 
 Private Sub SetEmptyMode()
   weekStatusCell.Value = WeekStatus.Emtpy
-  activeDayCell.Value = 0
+  activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
 End Sub
 
 Public Sub GoToNextDay()
-activeDayCell.Value = activeDayCell.Value + 1
-If activeDayCell.Value > 1 Then prevDayBtn.Visible = msoTrue
-If activeDayCell.Value = 5 Then nextDayBtn.Visible = msoFalse
+  activeDayCell.Value = activeDayCell.Value + 1
+  If activeDayCell.Value > WeekDay.Monday Then prevDayBtn.Visible = msoTrue
+  If activeDayCell.Value = WeekDay.Friday Then nextDayBtn.Visible = msoFalse
+  Populate activeDayCell.Value
 End Sub
 
 Public Sub GoToPreviousDay()
-activeDayCell.Value = activeDayCell.Value - 1
-If activeDayCell.Value = 1 Then prevDayBtn.Visible = msoFalse
-If activeDayCell.Value < 5 Then nextDayBtn.Visible = msoTrue
+  activeDayCell.Value = activeDayCell.Value - 1
+  If activeDayCell.Value = WeekDay.Monday Then prevDayBtn.Visible = msoFalse
+  If activeDayCell.Value < WeekDay.Friday Then nextDayBtn.Visible = msoTrue
+  Populate activeDayCell.Value
 End Sub
+
