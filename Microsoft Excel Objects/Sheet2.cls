@@ -14,24 +14,17 @@ Attribute VB_Exposed = True
 ' --------------------------------------------
 Public sheet As Worksheet
 
-Private isMoChecked, isDiChecked, isMiChecked, isDoChecked, isFrChecked As Range
 Private nextDayBtn, prevDayBtn As Shape
-Private weekStatusCell, actualTagCell As Range
+Private weekStatusCell, activeDayCell As Range
 
 Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
-  
-  Set isMoChecked = Range("Sh2_IsMoChecked")
-  Set isDiChecked = Range("Sh2_IsDiChecked")
-  Set isMiChecked = Range("Sh2_IsMiChecked")
-  Set isDoChecked = Range("Sh2_IsDoChecked")
-  Set isFrChecked = Range("Sh2_IsFrChecked")
   
   Set nextDayBtn = Me.sheet.Shapes("Sh2_NextDayBtn")
   Set prevDayBtn = Me.sheet.Shapes("Sh2_PreviousDayBtn")
   
   Set weekStatusCell = Range("Sh2_WeekStatusCell")
-  Set actualTagCell = Range("Sh2_ModifyingTagLabel")
+  Set activeDayCell = Range("Sh2_ActiveDay")
 End Sub
 
 Public Sub WeekDataLoad()
@@ -64,6 +57,10 @@ Private Sub Populate(weekData As Collection, weekDay As Integer)
   
   Dim stanzStartRow, qualiStartRow, lagerStartRow, bueroStartRow, galvaStartRow, instStartRow As Integer
   Dim shiftsStartCol, startWorkPlace As Integer
+  
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+'  sheet.Unprotect Password:=GAdminPassword
   
   ' Set variable for the view
   shiftStartCol = 7 'G
@@ -127,6 +124,10 @@ Private Sub Populate(weekData As Collection, weekDay As Integer)
       sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (weekDay - 1)).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
+  
+  ' Enable screen updating and protection
+  Application.ScreenUpdating = True
+'  sheet.Protect Password:=GAdminPassword
 End Sub
 
 Public Sub ToggleMode()
@@ -142,82 +143,52 @@ End Sub
 
 Private Sub SetNormalMode()
   weekStatusCell.Value = WeekStatus.Normal
-  actualTagCell.Value = "MONTAG bis FREITAG"
+  activeDayCell.Value = 0
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
-  isMoChecked.Value = True
-  isDiChecked.Value = True
-  isMiChecked.Value = True
-  isDoChecked.Value = True
-  isFrChecked.Value = True
+  
 End Sub
 
 Private Sub SetCustomMode()
   weekStatusCell.Value = WeekStatus.Custom
-  actualTagCell.Value = "MONTAG"
+  activeDayCell.Value = 1
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoTrue
-  isMoChecked.Value = True
-  isDiChecked.Value = False
-  isMiChecked.Value = False
-  isDoChecked.Value = False
-  isFrChecked.Value = False
 End Sub
 
 Private Sub SetEmptyMode()
   weekStatusCell.Value = WeekStatus.Emtpy
-  actualTagCell.Value = "MONTAG bis FREITAG"
+  activeDayCell.Value = 0
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
-  isMoChecked.Value = True
-  isDiChecked.Value = True
-  isMiChecked.Value = True
-  isDoChecked.Value = True
-  isFrChecked.Value = True
 End Sub
 
 Public Sub GoToNextDay()
-  Select Case actualTagCell.Value
-    Case "MONTAG"
-      actualTagCell.Value = "DIENSTAG"
-      isMoChecked.Value = False
-      isDiChecked.Value = True
+  Select Case activeDayCell.Value
+    Case 1 'Montag > Dienstag
+      activeDayCell.Value = 2
       prevDayBtn.Visible = msoTrue
-    Case "DIENSTAG"
-      actualTagCell.Value = "MITTWOCH"
-      isDiChecked.Value = False
-      isMiChecked.Value = True
-    Case "MITTWOCH"
-      actualTagCell.Value = "DONNERSTAG"
-      isMiChecked.Value = False
-      isDoChecked.Value = True
-    Case "DONNERSTAG"
-      actualTagCell.Value = "FREITAG"
-      isDoChecked.Value = False
-      isFrChecked.Value = True
+    Case 2 'Dienstag > Mittwoch
+      activeDayCell.Value = 3
+    Case 3 'Mittwoch > Donnerstag
+      activeDayCell.Value = 4
+    Case 4 'Donnerstag > Freitag
+      activeDayCell.Value = 5
       nextDayBtn.Visible = msoFalse
   End Select
 End Sub
 
 Public Sub GoToPreviousDay()
-  Select Case actualTagCell.Value
-    Case "FREITAG"
-      actualTagCell.Value = "DONNERSTAG"
-      isFrChecked.Value = False
-      isDoChecked.Value = True
+  Select Case activeDayCell.Value
+    Case 5 'Freitag > Donnerstag
+      activeDayCell.Value = 4
       nextDayBtn.Visible = msoTrue
-    Case "DONNERSTAG"
-      actualTagCell.Value = "MITTWOCH"
-      isDoChecked.Value = False
-      isMiChecked.Value = True
-    Case "MITTWOCH"
-      actualTagCell.Value = "DIENSTAG"
-      isMiChecked.Value = False
-      isDiChecked.Value = True
-    Case "DIENSTAG"
-      actualTagCell.Value = "MONTAG"
-      isDiChecked.Value = False
-      isMoChecked.Value = True
+    Case 4 'Donnerstag > Mittwoch
+      activeDayCell.Value = 3
+    Case 3 'Mittwoch > Dienstag
+      activeDayCell.Value = 2
+    Case 2 'Dienstag > Montag
+      activeDayCell.Value = 1
       prevDayBtn.Visible = msoFalse
   End Select
 End Sub
