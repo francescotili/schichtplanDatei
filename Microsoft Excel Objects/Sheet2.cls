@@ -14,9 +14,10 @@ Attribute VB_Exposed = True
 ' --------------------------------------------
 Public sheet As Worksheet
 Private weekData As Collection
+Private weekNumber As Double
 
 Private nextDayBtn, prevDayBtn As Shape
-Private weekStatusCell, activeDayCell As Range
+Private weekToLoadCell, weekStatusCell, activeDayCell As Range
 
 Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
@@ -24,21 +25,19 @@ Public Sub Worksheet_Activate()
   Set nextDayBtn = Me.sheet.Shapes("Sh2_NextDayBtn")
   Set prevDayBtn = Me.sheet.Shapes("Sh2_PreviousDayBtn")
   
+  Set weekToLoadCell = Range("Sh2_WeekToLoadCell")
   Set weekStatusCell = Range("Sh2_WeekStatusCell")
   Set activeDayCell = Range("Sh2_ActiveDay")
+  
+  WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
 
 Public Sub WeekDataLoad()
   Dim shiftList As New SchichtList
-  Dim i, j As Long
-  Dim weekNumber As Integer
-  
-  ' Get the week number
-  weekNumber = CInt(Range("Sh2_WeekToLoadCell").Value)
   
   ' Get the week data
-  shiftList.WeekRead (weekNumber)
-  Set weekData = shiftList.weekData
+  weekNumber = CInt(weekToLoadCell.Value)
+  Load
   
   ' Worflow based on week status (read at monday)
   Select Case weekData.Item(WeekDay.Monday).shiftStatus
@@ -50,7 +49,38 @@ Public Sub WeekDataLoad()
     Case WeekStatus.Custom
       SetCustomMode
   End Select
-  Populate WeekDay.Monday
+  Populate Monday
+End Sub
+
+Public Sub WeekDataSave()
+  If weekStatusCell.Value = WeekStatus.Custom Then
+    Dim window As New Sheet2_CustomSave
+    With window
+      .StartUpPosition = 0
+      .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
+      .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
+      .Show
+    End With
+  Else
+    Dim msgAnswer As Integer
+    Dim msgText, msgTitle As String
+    
+    msgText = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
+    msgTitle = "Fortfahren?"
+    msgAnswer = MsgBox(msgText, vbQuestion + vbYesNo, msgTitle)
+  End If
+  
+  ' Read every schicht for the day or selected days
+  ' Build SchichtDay objects and pass them to the Schichtplan class for saving
+  
+End Sub
+
+Private Sub Load()
+  Dim shiftList As New SchichtList
+  
+  ' Get the week data
+  shiftList.WeekRead weekNumber
+  Set weekData = shiftList.weekData
 End Sub
 
 Private Sub Populate(day As WeekDay)
@@ -149,7 +179,6 @@ Private Sub SetNormalMode()
   activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
-  
 End Sub
 
 Private Sub SetCustomMode()
