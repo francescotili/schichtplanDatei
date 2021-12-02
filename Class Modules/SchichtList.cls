@@ -55,10 +55,10 @@ Public Sub Load()
   End If
 End Sub
 
-'Public Sub WeekSave()
-'  ' Save or modify the passed week
-'
-'End Sub
+Public Sub WeekSave() 'weekData As Collection
+  ' Save or modify the passed week
+  
+End Sub
 
 Public Sub WeekRead(weekNumber As Double)
   Dim startDate, endDate As Date

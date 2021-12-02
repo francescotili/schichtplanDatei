@@ -17,7 +17,7 @@ Private weekData As Collection
 Private weekNumber As Double
 
 Private nextDayBtn, prevDayBtn As Shape
-Private weekToLoadCell, weekStatusCell, activeDayCell As Range
+Private weekToLoadCell, weekStatusCell, activeDayCell, changesDetectedCell As Range
 
 Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
@@ -28,6 +28,7 @@ Public Sub Worksheet_Activate()
   Set weekToLoadCell = Range("Sh2_WeekToLoadCell")
   Set weekStatusCell = Range("Sh2_WeekStatusCell")
   Set activeDayCell = Range("Sh2_ActiveDay")
+  Set changesDetectedCell = Range("Sh2_ChangesDetected")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
@@ -83,7 +84,7 @@ Private Sub Load()
   Set weekData = shiftList.weekData
 End Sub
 
-Private Sub Populate(day As WeekDay)
+Private Sub Populate(passedDay As WeekDay)
   ' This function take the day of the week and populate the various
   ' sections of the Worksheet.
   ' Warning: before calling this function, please load and pass the right data!
@@ -104,7 +105,7 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 11
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -114,7 +115,7 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 13
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -124,7 +125,7 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 15
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -134,7 +135,7 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 20
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1) * 4).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -144,7 +145,7 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 26
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
   
@@ -154,9 +155,12 @@ Private Sub Populate(day As WeekDay)
   endWorkPlace = 33
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (day - 1)).workPlace(i + startWorkPlace - 2))
+      sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
     Next j
   Next i
+  
+  ' Reset changes detected
+  changesDetectedCell.Value = False
   
   ' Enable screen updating and protection
   Application.ScreenUpdating = True
@@ -164,14 +168,23 @@ Private Sub Populate(day As WeekDay)
 End Sub
 
 Public Sub ToggleMode()
+  If changesDetectedCell.Value = True Then
+    answer = MsgBox("Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & _
+      "Wenn Sie fortfahren, gehen die verloren. Fortfahren?", vbExclamation + vbYesNo, "ACHTUNG")
+    If answer = vbYes Then GoTo ToggleMode Else GoTo NoToggle
+  Else
+    GoTo ToggleMode
+  End If
+ToggleMode:
   Select Case weekStatusCell.Value
     Case WeekStatus.Emtpy
-      SetEmptyMode
+      SetNormalMode
     Case WeekStatus.Normal
       SetCustomMode
     Case WeekStatus.Custom
       SetNormalMode
   End Select
+NoToggle:
 End Sub
 
 Private Sub SetNormalMode()
@@ -179,6 +192,8 @@ Private Sub SetNormalMode()
   activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
+  Populate Monday
+  changesDetectedCell.Value = False
 End Sub
 
 Private Sub SetCustomMode()
@@ -186,14 +201,17 @@ Private Sub SetCustomMode()
   activeDayCell.Value = WeekDay.Monday
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoTrue
+  Populate Monday
+  changesDetectedCell.Value = False
 End Sub
 
 Private Sub SetEmptyMode()
-  EmptyPlan
   weekStatusCell.Value = WeekStatus.Emtpy
   activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
+  EmptyPlan
+  changesDetectedCell.Value = False
 End Sub
 
 Public Sub GoToNextDay()
@@ -216,4 +234,10 @@ Private Sub EmptyPlan()
   shiftStartCell = "G7"
   shiftEndCell = "J110"
   Range(shiftStartCell & ":" & shiftEndCell).ClearContents
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+  If Not Intersect(Target, Range("G7:J110")) Is Nothing Then ' Monitor changes on Schichtplan
+    changesDetectedCell.Value = True
+  End If
 End Sub
