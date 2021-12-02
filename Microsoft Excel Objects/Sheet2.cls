@@ -42,14 +42,14 @@ Public Sub WeekDataLoad()
   ' Worflow based on week status (read at monday)
   Select Case weekData.Item(WeekDay.Monday).shiftStatus
     Case WeekStatus.Emtpy
-      'SetEmptyMode
-      SetNormalMode
+      SetEmptyMode
     Case WeekStatus.Normal
       SetNormalMode
+      Populate Monday
     Case WeekStatus.Custom
       SetCustomMode
+      Populate Monday
   End Select
-  Populate Monday
 End Sub
 
 Public Sub WeekDataSave()
@@ -165,8 +165,8 @@ End Sub
 
 Public Sub ToggleMode()
   Select Case weekStatusCell.Value
-'    Case WeekStatus.Emtpy
-'      SetNormalMode
+    Case WeekStatus.Emtpy
+      SetEmptyMode
     Case WeekStatus.Normal
       SetCustomMode
     Case WeekStatus.Custom
@@ -189,6 +189,7 @@ Private Sub SetCustomMode()
 End Sub
 
 Private Sub SetEmptyMode()
+  EmptyPlan
   weekStatusCell.Value = WeekStatus.Emtpy
   activeDayCell.Value = WeekDay.Unknown
   prevDayBtn.Visible = msoFalse
@@ -209,3 +210,10 @@ Public Sub GoToPreviousDay()
   Populate activeDayCell.Value
 End Sub
 
+Private Sub EmptyPlan()
+  Dim shiftStartCell, shiftEndCell As String
+  
+  shiftStartCell = "G7"
+  shiftEndCell = "J110"
+  Range(shiftStartCell & ":" & shiftEndCell).ClearContents
+End Sub
