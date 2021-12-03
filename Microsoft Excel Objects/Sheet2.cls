@@ -19,6 +19,10 @@ Private weekNumber As Double
 Private nextDayBtn, prevDayBtn As Shape
 Private weekToLoadCell, weekStatusCell, activeDayCell, changesDetectedCell As Range
 
+' Strings
+Private Const losignDataWarningText = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
+Private Const savingDataWarningText = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
+
 Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
   
@@ -36,6 +40,14 @@ End Sub
 Public Sub WeekDataLoad()
   Dim shiftList As New SchichtList
   
+  If changesDetectedCell.Value = True Then
+    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  Else
+    GoTo Proceed
+  End If
+
+Proceed:
   ' Get the week data
   weekNumber = CInt(weekToLoadCell.Value)
   Load
@@ -51,6 +63,7 @@ Public Sub WeekDataLoad()
       SetCustomMode
       Populate Monday
   End Select
+Abort:
 End Sub
 
 Public Sub WeekDataSave()
@@ -64,11 +77,8 @@ Public Sub WeekDataSave()
     End With
   Else
     Dim msgAnswer As Integer
-    Dim msgText, msgTitle As String
-    
-    msgText = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
-    msgTitle = "Fortfahren?"
-    msgAnswer = MsgBox(msgText, vbQuestion + vbYesNo, msgTitle)
+    msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
+    ' Logic vbYes, vbNo
   End If
   
   ' Read every schicht for the day or selected days
@@ -169,8 +179,7 @@ End Sub
 
 Public Sub ToggleMode()
   If changesDetectedCell.Value = True Then
-    answer = MsgBox("Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & _
-      "Wenn Sie fortfahren, gehen die verloren. Fortfahren?", vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
     If answer = vbYes Then GoTo ToggleMode Else GoTo NoToggle
   Else
     GoTo ToggleMode
@@ -215,17 +224,34 @@ Private Sub SetEmptyMode()
 End Sub
 
 Public Sub GoToNextDay()
+  If changesDetectedCell.Value = True Then
+    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  Else
+    GoTo Proceed
+  End If
+Proceed:
   activeDayCell.Value = activeDayCell.Value + 1
   If activeDayCell.Value > WeekDay.Monday Then prevDayBtn.Visible = msoTrue
   If activeDayCell.Value = WeekDay.Friday Then nextDayBtn.Visible = msoFalse
   Populate activeDayCell.Value
+Abort:
 End Sub
 
 Public Sub GoToPreviousDay()
+  If changesDetectedCell.Value = True Then
+    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    Debug.Print answer
+    If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  Else
+    GoTo Proceed
+  End If
+Proceed:
   activeDayCell.Value = activeDayCell.Value - 1
   If activeDayCell.Value = WeekDay.Monday Then prevDayBtn.Visible = msoFalse
   If activeDayCell.Value < WeekDay.Friday Then nextDayBtn.Visible = msoTrue
   Populate activeDayCell.Value
+Abort:
 End Sub
 
 Private Sub EmptyPlan()
