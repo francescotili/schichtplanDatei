@@ -13,6 +13,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Private Sub SaveButton_Click()
+  Sheet2.Save
+End Sub
+
 Private Sub UserForm_Activate()
   Dim activeDayCell As Range
   Set activeDayCell = Range("Sh2_ActiveDay")
@@ -30,3 +34,4 @@ Private Sub UserForm_Activate()
     Me.FrCheckbox.Value = True
   End Select
 End Sub
+

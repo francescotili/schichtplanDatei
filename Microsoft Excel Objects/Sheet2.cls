@@ -80,18 +80,16 @@ Private Sub WeekDataSave()
       .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
       .Show
     End With
-    ' TODO
-  
   Case WeekStatus.Emtpy, WeekStatus.Normal
     Dim msgAnswer As Integer
     msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
-    ' Logic vbYes, vbNo
-  
+    If msgAnswer = vbYes Then Save
   End Select
-  
+End Sub
+
+Public Sub Save()
   ' Read every schicht for the day or selected days
   ' Build SchichtDay objects and pass them to the Schichtplan class for saving
-  
 End Sub
 
 Private Sub Load()
