@@ -23,6 +23,10 @@ Private weekToLoadCell, weekStatusCell, activeDayCell, changesDetectedCell As Ra
 Private Const losignDataWarningText = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
 Private Const savingDataWarningText = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
 
+Private Sub Sh2_WeekSaveBtn_Click()
+  WeekDataSave
+End Sub
+
 Public Sub Worksheet_Activate()
   Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
   
@@ -66,8 +70,9 @@ Proceed:
 Abort:
 End Sub
 
-Public Sub WeekDataSave()
-  If weekStatusCell.Value = WeekStatus.Custom Then
+Private Sub WeekDataSave()
+  Select Case weekStatusCell.Value
+  Case WeekStatus.Custom
     Dim window As New Sheet2_CustomSave
     With window
       .StartUpPosition = 0
@@ -75,11 +80,14 @@ Public Sub WeekDataSave()
       .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
       .Show
     End With
-  Else
+    ' TODO
+  
+  Case WeekStatus.Emtpy, WeekStatus.Normal
     Dim msgAnswer As Integer
     msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
     ' Logic vbYes, vbNo
-  End If
+  
+  End Select
   
   ' Read every schicht for the day or selected days
   ' Build SchichtDay objects and pass them to the Schichtplan class for saving
@@ -263,7 +271,9 @@ Private Sub EmptyPlan()
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
+  Sh2_WeekSaveBtn.Enabled = False
   If Not Intersect(Target, Range("G7:J110")) Is Nothing Then ' Monitor changes on Schichtplan
     changesDetectedCell.Value = True
+    Sh2_WeekSaveBtn.Enabled = True
   End If
 End Sub
