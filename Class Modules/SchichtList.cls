@@ -55,9 +55,27 @@ Public Sub Load()
   End If
 End Sub
 
-Public Sub WeekSave() 'weekData As Collection
-  ' Save or modify the passed week
+Public Sub WeekSave(passedData As SchichtDay)
+  Dim i, j, rowToSave As Long
   
+  ' Load the data
+  If Not table.DataBodyRange Is Nothing Then
+    shiftsData = table.DataBodyRange
+    
+    ' Search for the shiftCode to save
+    For i = LBound(shiftsData) To UBound(shiftsData)
+      If StrComp(shiftsData(i, 3), passedData.shiftCode, vbTextCompare) = 0 Then
+        rowToSave = i
+        Exit For
+      End If
+    Next i
+    
+    ' Save the row
+    table.DataBodyRange(rowToSave, 2).Value = passedData.shiftStatus
+    For j = 4 To 36 ' Columns for every workplace
+      table.DataBodyRange(rowToSave, j).Value = passedData.workPlace(j - 4)
+    Next j
+  End If
 End Sub
 
 Public Sub WeekRead(weekNumber As Double)
@@ -155,7 +173,7 @@ Private Function generateShiftsCode(inputDate As Date) As String()
     shiftCodes(i) = _
       year(inputDate) & _
       Format(Month(inputDate), "00") & _
-      Format(Day(inputDate), "00") & _
+      Format(day(inputDate), "00") & _
       shiftNames(i)
   Next i
   

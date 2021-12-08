@@ -17,7 +17,7 @@ Private weekData As Collection
 Private weekNumber As Double
 
 Private nextDayBtn, prevDayBtn As Shape
-Private weekToLoadCell, weekStatusCell, activeDayCell, changesDetectedCell As Range
+Private weekToLoadCell, weekStatusCell, activeDayCell, activeWeekCell, changesDetectedCell As Range
 
 ' Strings
 Private Const losignDataWarningText = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
@@ -36,14 +36,13 @@ Public Sub Worksheet_Activate()
   Set weekToLoadCell = Range("Sh2_WeekToLoadCell")
   Set weekStatusCell = Range("Sh2_WeekStatusCell")
   Set activeDayCell = Range("Sh2_ActiveDay")
+  Set activeWeekCell = Range("Sh2_ActiveWeek")
   Set changesDetectedCell = Range("Sh2_ChangesDetected")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
 
 Public Sub WeekDataLoad()
-  Dim shiftList As New SchichtList
-  
   If changesDetectedCell.Value = True Then
     answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
@@ -54,6 +53,7 @@ Public Sub WeekDataLoad()
 Proceed:
   ' Get the week data
   weekNumber = CInt(weekToLoadCell.Value)
+  activeWeekCell.Value = weekNumber
   Load
   
   ' Worflow based on week status (read at monday)
@@ -83,13 +83,126 @@ Private Sub WeekDataSave()
   Case WeekStatus.Emtpy, WeekStatus.Normal
     Dim msgAnswer As Integer
     msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
-    If msgAnswer = vbYes Then Save
+    If msgAnswer = vbYes Then Save WeekDay.Unknown
   End Select
 End Sub
 
-Public Sub Save()
+Public Sub Save(passedDay As WeekDay)
   ' Read every schicht for the day or selected days
-  ' Build SchichtDay objects and pass them to the Schichtplan class for saving
+  ' Define two cases for empty/normal and for custom
+  '   If normal
+  '     Build SchichtDay object varying the date component and save them every step
+  '   If custom
+  '     Build SchichtDay object based on the days selected and save them every step
+  
+  Dim startRow As Integer
+  Dim shiftsStartCol, startWorkPlace, endWorkPlace As Integer
+  Dim workPlaces(3, 32) As String
+  Dim i, j As Long
+  Dim shiftList As New SchichtList
+  Dim shiftData As New SchichtDay
+  
+  ' Set variable for the view
+  shiftStartCol = 7 ' Columnn G
+  
+  ' Read data for every shift and save them in a collection of workPlaces
+  For j = 1 To 4
+    ' Stanzerei
+    startRow = 7
+    startWorkPlace = 1
+    endWorkPlace = 11
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+    
+    ' Qualitaet
+    startRow = 41
+    startWorkPlace = 12
+    endWorkPlace = 13
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+    
+    ' Lager+Trommlerei
+    startRow = 48
+    startWorkPlace = 14
+    endWorkPlace = 15
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+    
+    ' Buero
+    startRow = 55
+    startWorkPlace = 16
+    endWorkPlace = 20
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+    
+    ' Galvanik
+    startRow = 71
+    startWorkPlace = 21
+    endWorkPlace = 26
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+    
+    ' Instandsetzung
+    startRow = 90
+    startWorkPlace = 27
+    endWorkPlace = 33
+    For i = 1 To (endWorkPlace - startWorkPlace + 1)
+      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    Next i
+  Next j
+  
+  ' Now save the different days based on the WeekModus
+  Dim d, s As Long
+  Dim tempWorkPlaces(32) As String
+  Select Case activeDayCell.Value
+    Case WeekDay.Unknown ' Normal Modus
+      
+      For d = 1 To 7 ' Days of the week
+        For s = 1 To 4 ' Shifts
+          shiftData.Init weekData.Item(4 * (d - 1) + s).shiftDate, Normal, Right(weekData.Item(4 * (d - 1) + s).shiftCode, 1)
+          ' Populate shiftData with a loop
+          For i = 0 To 32
+            tempWorkPlaces(i) = workPlaces(s - 1, i)
+          Next i
+          
+          shiftData.Populate tempWorkPlaces
+          shiftData.shiftStatus = WeekStatus.Normal
+          
+          ' Now save the SchichtDay (shiftData) object
+          shiftList.WeekSave shiftData
+        Next s
+      Next d
+    Case Else
+      For d = 1 To 7 ' Days of the week
+        For s = 1 To 4 ' Shifts
+          shiftData.Init weekData.Item(4 * (d - 1) + s).shiftDate, Normal, Right(weekData.Item(4 * (d - 1) + s).shiftCode, 1)
+          ' Populate shiftData with a loop
+          If d = passedDay Then
+            For i = 0 To 32
+              tempWorkPlaces(i) = workPlaces(s - 1, i)
+            Next i
+          Else
+            For i = 0 To 32
+              tempWorkPlaces(i) = CStr(weekData.Item(CLng(s + (d - 1) * 4)).workPlace(CLng(i)))
+            Next i
+          End If
+          
+          shiftData.Populate tempWorkPlaces
+          shiftData.shiftStatus = WeekStatus.Custom
+          
+          ' Now save the SchichtDay (shiftData) object
+          shiftList.WeekSave shiftData
+        Next s
+      Next d
+  End Select
+  
+  ' Reset changes detected
+  changesDetectedCell.Value = False
 End Sub
 
 Private Sub Load()
@@ -106,14 +219,15 @@ Private Sub Populate(passedDay As WeekDay)
   ' Warning: before calling this function, please load and pass the right data!
   
   Dim stanzStartRow, qualiStartRow, lagerStartRow, bueroStartRow, galvaStartRow, instStartRow As Integer
-  Dim shiftsStartCol, startWorkPlace As Integer
+  Dim shiftsStartCol, startWorkPlace, endWorkPlace As Integer
+  Dim i, j As Long
   
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
 '  sheet.Unprotect Password:=GAdminPassword
   
   ' Set variable for the view
-  shiftStartCol = 7 'G
+  shiftStartCol = 7 ' Columnn G
   
   ' Stanzerei
   stanzStartRow = 7

@@ -14,7 +14,26 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub SaveButton_Click()
-  Sheet2.Save
+  If Me.MoCheckbox.Value Then
+    Sheet2.Save Monday
+    Sheet2.WeekDataLoad
+  End If
+  If Me.DiCheckbox.Value Then
+    Sheet2.Save Tuesday
+    Sheet2.WeekDataLoad
+  End If
+  If Me.MiCheckbox.Value Then
+    Sheet2.Save Wednesday
+    Sheet2.WeekDataLoad
+  End If
+  If Me.DoCheckbox.Value Then
+    Sheet2.Save Thursday
+    Sheet2.WeekDataLoad
+  End If
+  If Me.FrCheckbox.Value Then
+    Sheet2.Save Friday
+    Sheet2.WeekDataLoad
+  End If
 End Sub
 
 Private Sub UserForm_Activate()
@@ -24,14 +43,19 @@ Private Sub UserForm_Activate()
   Select Case activeDayCell.Value
   Case WeekDay.Monday
     Me.MoCheckbox.Value = True
+    Me.MoCheckbox.Enabled = False
   Case WeekDay.Tuesday
     Me.DiCheckbox.Value = True
+    Me.DiCheckbox.Enabled = False
   Case WeekDay.Wednesday
     Me.MiCheckbox.Value = True
+    Me.MiCheckbox.Enabled = False
   Case WeekDay.Thursday
     Me.DoCheckbox.Value = True
+    Me.DoCheckbox.Enabled = False
   Case WeekDay.Friday
     Me.FrCheckbox.Value = True
+    Me.FrCheckbox.Enabled = False
   End Select
 End Sub
 
