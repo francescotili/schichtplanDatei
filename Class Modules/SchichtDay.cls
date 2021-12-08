@@ -16,7 +16,7 @@ Private workPlaces(32) As String ' You cannot have a Public array in a Class Mod
 Public Sub Init(shiftDate As Date, shiftStatus As WeekStatus, shiftName As String)
   Me.shiftDate = shiftDate
   Me.shiftStatus = shiftStatus
-  Me.shiftCode = year(shiftDate) & Format(Month(shiftDate), "00") & Format(Day(shiftDate), "00") & shiftName
+  Me.shiftCode = year(shiftDate) & Format(Month(shiftDate), "00") & Format(day(shiftDate), "00") & shiftName
 End Sub
 
 Public Sub Populate(shiftData() As String)
