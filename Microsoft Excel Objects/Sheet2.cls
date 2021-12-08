@@ -161,6 +161,7 @@ Public Sub Save(passedDay As WeekDay)
   Dim tempWorkPlaces(32) As String
   Select Case activeDayCell.Value
     Case WeekDay.Unknown ' Normal Modus
+      saveHistory ("Der Schichtplan für KW" & activeWeekCell.Value & " wurde geändert")
       
       For d = 1 To 7 ' Days of the week
         For s = 1 To 4 ' Shifts
@@ -178,7 +179,8 @@ Public Sub Save(passedDay As WeekDay)
         Next s
       Next d
     Case Else
-      For d = 1 To 7 ' Days of the week
+      For d = 1 To 5 ' Days of the week
+        saveHistory ("Der Schichtplan für den " & weekData.Item(4 * (passedDay - 1) + s).shiftDate & " (KW" & activeWeekCell.Value & ") wurde geändert")
         For s = 1 To 4 ' Shifts
           shiftData.Init weekData.Item(4 * (d - 1) + s).shiftDate, Normal, Right(weekData.Item(4 * (d - 1) + s).shiftCode, 1)
           ' Populate shiftData with a loop
