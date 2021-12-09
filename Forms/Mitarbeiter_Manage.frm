@@ -41,8 +41,8 @@ Private Sub Btn_MitarbeiterDelete_Click()
     Dim Msg, Style, Title
     Msg = "ACHTUNG!" & vbCrLf & "Mitarbeiter-Nr. " & selectedPCode & " wird endgultig gelöscht." & vbCrLf & "Wirklich fortfahren ??"
     Style = vbYesNo + vbExclamation + vbDefaultButton2
-    Response = MsgBox(Msg, Style, Title)
-    If Response = vbYes Then ' User wants to continue
+    response = MsgBox(Msg, Style, Title)
+    If response = vbYes Then ' User wants to continue
       Dim workersData As New MitarbeiterList
       workersData.Delete (selectedPCode)
       UpdateData

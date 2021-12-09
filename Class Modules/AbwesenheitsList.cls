@@ -105,3 +105,17 @@ Public Sub WorkerDelete(Optional personalCode As String = "null")
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
 End Sub
+
+Public Property Get AllMitarbeiter() As String()
+  Dim response() As String
+  Dim numOfWorkers As Integer
+  Dim i As Long
+  
+  numOfWorkers = table.DataBodyRange.Columns.Count - 2
+  ReDim response(numOfWorkers)
+  For i = 2 To table.DataBodyRange.Columns.Count
+    response(i - 2) = table.HeaderRowRange(1, i)
+  Next i
+  
+  AllMitarbeiter = response
+End Property

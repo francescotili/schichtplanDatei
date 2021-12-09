@@ -115,7 +115,7 @@ Public Sub Save(newWorker As Mitarbeiter)
       table.DataBodyRange(1, (j + 1)).Value = entry(j)
     Next j
     ' Update history
-    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefï¿½gt")
+    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefügt")
     ' Add the new worker in the Vacation Plan
     Dim vacationList As New AbwesenheitsList
     vacationList.WorkerAdd newWorker
@@ -193,7 +193,7 @@ Public Sub Reset()
   sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
   
   ' Save history entry
-  saveHistory ("DIE MITARBEITERLISTE WURDE GELï¿½SCHT")
+  saveHistory ("DIE MITARBEITERLISTE WURDE GELÖSCHT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
