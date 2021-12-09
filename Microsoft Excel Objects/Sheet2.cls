@@ -227,6 +227,7 @@ Private Sub Populate(passedDay As WeekDay)
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
 '  sheet.Unprotect Password:=GAdminPassword
+  EmptyPlan
   
   ' Set variable for the view
   shiftStartCol = 7 ' Columnn G
@@ -237,7 +238,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 11
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
@@ -247,7 +250,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 13
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
@@ -257,7 +262,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 15
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
@@ -267,7 +274,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 20
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
@@ -277,7 +286,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 26
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
@@ -287,7 +298,9 @@ Private Sub Populate(passedDay As WeekDay)
   endWorkPlace = 33
   For i = 1 To (endWorkPlace - startWorkPlace + 1)
     For j = 1 To 4
-      sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))) <> 0 Then
+        sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
+      End If
     Next j
   Next i
   
