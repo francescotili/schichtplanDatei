@@ -64,7 +64,7 @@ Public Sub TableInitialize()
   If table.ListColumns.Count > (startWorkerColumn - 1) Then
     maxColumn = table.ListColumns.Count
     For i = startWorkerColumn To maxColumn
-      table.ListColumns(startWorkerColumn).Delete
+      sheet.Columns(startWorkerColumn + 4).EntireColumn.Delete
     Next i
   End If
   
