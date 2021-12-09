@@ -15,6 +15,7 @@ Public Const GVacationsTableName As String = "FeiertageList"
 Public Const GHistoryTableName As String = "Historie"
 Public Const GAbsencesTableName As String = "UrlaubsplanDB"
 Public Const GShiftsTableName As String = "SchichtplanDB"
+Public Const GAbsencesModifyTableName As String = "Urlaubsplan"
 
 ' Enums
 Public Enum WeekStatus
