@@ -16,14 +16,6 @@ Public Const GHistoryTableName As String = "Historie"
 Public Const GAbsencesTableName As String = "UrlaubsplanDB"
 Public Const GShiftsTableName As String = "SchichtplanDB"
 
-' Sheet names
-Public Const GUserSheetName As String = "Personal"
-Public Const GVacationsSheetName As String = "Feiertage"
-Public Const GHistorySheetName As String = "Historie"
-Public Const GAbsencesSheetName As String = "AH_DB"
-Public Const GShiftsSheetName As String = "SP_DB"
-Public Const GWeekModifySheetName As String = "Bearbeiten"
-
 ' Enums
 Public Enum WeekStatus
   ' The week is not yet initialized AKA no data contained

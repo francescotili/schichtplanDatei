@@ -21,7 +21,7 @@ Private table As ListObject
 Private Const customFont As String = "Franklin Gothic Medium Cond"
 
 Private Sub Class_Initialize()
-  Set sheet = ActiveWorkbook.Worksheets(GShiftsSheetName)
+  Set sheet = Sheet1
   Set table = sheet.ListObjects.Item(GShiftsTableName)
 End Sub
 

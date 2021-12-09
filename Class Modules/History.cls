@@ -15,7 +15,7 @@ Private table As ListObject
 
 Private Sub Class_Initialize()
   Me.eventName = ""
-  Set sheet = ActiveWorkbook.Worksheets(GHistorySheetName)
+  Set sheet = Sheet4
   Set table = sheet.ListObjects.Item(GHistoryTableName)
 End Sub
 

@@ -16,7 +16,7 @@ Private Const customFont As String = "Franklin Gothic Medium Cond"
 Private Const startWorkerColumn As Integer = 2
 
 Private Sub Class_Initialize()
-  Set sheet = ActiveWorkbook.Worksheets(GAbsencesSheetName)
+  Set sheet = Sheet8
   Set table = sheet.ListObjects.Item(GAbsencesTableName)
 End Sub
 
@@ -73,7 +73,7 @@ Public Sub GenerateYear(year As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT")
+  saveHistory ("DER ABWESENHEITPLAN WURDE ZURï¿½CKGESETZT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True

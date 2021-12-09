@@ -28,7 +28,7 @@ Private Sub Sh2_WeekSaveBtn_Click()
 End Sub
 
 Public Sub Worksheet_Activate()
-  Set sheet = ActiveWorkbook.Worksheets(GWeekModifySheetName)
+  Set sheet = Sheet2
   
   Set nextDayBtn = Me.sheet.Shapes("Sh2_NextDayBtn")
   Set prevDayBtn = Me.sheet.Shapes("Sh2_PreviousDayBtn")

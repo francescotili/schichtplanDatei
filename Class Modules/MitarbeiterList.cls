@@ -19,7 +19,7 @@ Private sheet As Worksheet
 Private table As ListObject
 
 Private Sub Class_Initialize()
-  Set sheet = ActiveWorkbook.Worksheets(GUserSheetName)
+  Set sheet = Sheet9
   Set table = sheet.ListObjects.Item(GWorkerTableName)
 End Sub
 
@@ -115,7 +115,7 @@ Public Sub Save(newWorker As Mitarbeiter)
       table.DataBodyRange(1, (j + 1)).Value = entry(j)
     Next j
     ' Update history
-    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefügt")
+    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefï¿½gt")
     ' Add the new worker in the Vacation Plan
     Dim vacationList As New AbwesenheitsList
     vacationList.WorkerAdd newWorker
@@ -193,7 +193,7 @@ Public Sub Reset()
   sheet.PivotTables("MitarbeiterList_Stanzerei").RefreshTable
   
   ' Save history entry
-  saveHistory ("DIE MITARBEITERLISTE WURDE GELÖSCHT")
+  saveHistory ("DIE MITARBEITERLISTE WURDE GELï¿½SCHT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
