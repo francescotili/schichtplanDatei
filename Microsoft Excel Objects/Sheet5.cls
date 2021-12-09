@@ -18,10 +18,11 @@ Private table As ListObject
 Private changesDetectedCell As Range
 
 ' Table styles
-Private Const workerColumnWidth As Double = 4
-Private Const abteilungFontSize As Double = 8
-Private Const customFont As String = "Franklin Gothic Medium Cond"
+Private Const workerColumnWidth As Double = 5
 Private Const startWorkerColumn As Integer = 6
+Private Const holidayRow As Integer = 3
+Private Const personalCodeRow As Integer = 9
+Private Const departmentRow As Integer = 10
 
 ' Strings
 Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
@@ -67,18 +68,54 @@ Public Sub TableInitialize()
     Next i
   End If
   
+  ' Initialize MitarbeiterList class
+  Dim workersList As New MitarbeiterList
+  
   ' Get the worker and generate columns
   Dim absenceList As New AbwesenheitsList
   Dim workersCodes() As String
   workersCodes = absenceList.AllMitarbeiter
+  Dim currentColumn As Integer
   
   ' Generate columns for every worker
   For i = LBound(workersCodes) To UBound(workersCodes)
     table.ListColumns.Add
+    
+    workersList.Search workersCodes(i)
     With table.HeaderRowRange(1, i + startWorkerColumn)
-      .Value = workersCodes(i)
+      .Value = workersList.worker.visName
       .ColumnWidth = workerColumnWidth
       .Orientation = xlUpward
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+      
+      currentColumn = .Column
+    End With
+    
+    ' Add maximal holiday days
+    With Cells(holidayRow, currentColumn)
+      .Value = workersList.worker.vacationTotal
+      .Font.Bold = True
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Add all the remaining formulas
+    ' with Cells.Formula = "=FORMULA()"
+    
+    ' Add personal code
+    With Cells(personalCodeRow, currentColumn)
+      .Value = workersList.worker.personalCode
+      .Orientation = xlUpward
+      .Font.Size = 10
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Add department
+    With Cells(departmentRow, currentColumn)
+      .Value = workersList.worker.department
+      .Font.Size = 8
       .HorizontalAlignment = xlHAlignCenter
       .VerticalAlignment = xlVAlignCenter
     End With
