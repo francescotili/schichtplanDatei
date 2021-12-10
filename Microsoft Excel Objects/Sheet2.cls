@@ -244,7 +244,7 @@ Private Sub Populate(passedDay As WeekDay)
     Next j
   Next i
   
-  ' Qualität
+  ' Qualitaet
   qualiStartRow = 41
   startWorkPlace = 12
   endWorkPlace = 13
@@ -268,7 +268,7 @@ Private Sub Populate(passedDay As WeekDay)
     Next j
   Next i
   
-  ' Büro
+  ' Buero
   bueroStartRow = 55
   startWorkPlace = 16
   endWorkPlace = 20
