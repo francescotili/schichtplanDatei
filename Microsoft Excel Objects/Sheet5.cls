@@ -31,11 +31,13 @@ Public Sub Worksheet_Activate()
   
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
   
-  'AbsenceDataLoad
+  AbsenceDataLoad
   'TableInitialize 2023
 End Sub
 
 Private Sub AbsenceDataLoad()
+  Dim i, j As Long
+  
   If changesDetectedCell.Value = True Then
     answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
@@ -45,16 +47,49 @@ Private Sub AbsenceDataLoad()
 
 Proceed:
   Dim absenceList As New AbwesenheitsList
+  Dim workersCodesDB() As String
   Dim workersCodes() As String
   
-  ' Get the mitarbeiter and check columns
-  workersCodes = absenceList.AllMitarbeiter
+  ' Get the workers from database
+  workersCodesDB = absenceList.AllMitarbeiter
   
-  ' Add or remove columns if needed, mantain the custom order!
-  ' Display messages if workers where modified
+  ' Get the workers from the table
+  Dim startCol, endCol As Integer
+  startCol = table.HeaderRowRange(1, startWorkerColumn).Column
+  endCol = table.HeaderRowRange(1, table.DataBodyRange.Columns.Count).Column
+  ReDim workersCodes(endCol - startCol)
+  For i = startCol To endCol
+    workersCodes(i - startCol) = Cells(statisticsBeginRow + 6, i)
+  Next i
+  
+  ' Check if all the workers in DB are in the table, if not then add it
+  For Each workerDB In workersCodesDB
+    If Not (UBound(Filter(workersCodes, workerDB)) > -1) Then
+      MsgBox "A worker is missing!"
+      'AddWorker workerDB
+    End If
+  Next
+  
+  ' Check if all the workers in the table are in the DB, if not then delete it
+  For Each worker In workersCodes
+    If Not (UBound(Filter(workersCodesDB, worker)) > -1) Then
+      MsgBox "A worker must be deleted!"
+      'DeleteWorker workerDB
+    End If
+  Next
+
+
   ' Get absence list for every worker and then populate the respective rows
 
 Abort:
+End Sub
+
+Private Sub AddWorker(workerPCode As String)
+  
+End Sub
+
+Private Sub DeleteWorker(workerPCode As String)
+
 End Sub
 
 Public Sub TableInitialize(year As Integer)
@@ -185,12 +220,8 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
   'Sh5_PlanSaveBtn.Enabled = False
-  With table ' Monitor changes in the main table
-    If Not .DataBodyRange Is Nothing Then
-      If Not Intersect(Target, .DataBodyRange) Is Nothing Then
-        changesDetectedCell.Value = True
-        'Sh5_PlanSaveBtn.Enabled = True
-      End If
-    End If
-  End With
+  If Target.row > 11 Then ' Everything under Row 11 will trigger
+    changesDetectedCell.Value = True
+    'Sh5_PlanSaveBtn.Enabled = True
+  End If
 End Sub
