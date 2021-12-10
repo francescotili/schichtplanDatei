@@ -11,8 +11,6 @@ Private sheet As Worksheet
 Private table As ListObject
 
 Private Const workerColumnWidth As Double = 4
-Private Const abteilungFontSize As Double = 8
-Private Const customFont As String = "Franklin Gothic Medium Cond"
 Private Const startWorkerColumn As Integer = 2
 
 Private Sub Class_Initialize()
@@ -73,7 +71,7 @@ Public Sub GenerateYear(year As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER ABWESENHEITPLAN WURDE ZURï¿½CKGESETZT")
+  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -105,6 +103,10 @@ Public Sub WorkerDelete(Optional personalCode As String = "null")
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
 End Sub
+
+Property Get GetMitarbeiter(personalCode As String) As String()
+  
+End Property
 
 Public Property Get AllMitarbeiter() As String()
   Dim response() As String
