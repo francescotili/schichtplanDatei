@@ -34,6 +34,7 @@ Private Sub Proceed_Click()
   If Vacation_Check = True Then
     Dim vacationList As New AbwesenheitsList
     vacationList.GenerateYear JahrTextbox.Value ' Sanitized in JahrTextbox_Change()
+    Sheet5.TableInitialize JahrTextbox.Value
   End If
   
   ' Delete workers database and update also vacation list

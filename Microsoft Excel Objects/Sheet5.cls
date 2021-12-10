@@ -20,9 +20,7 @@ Private changesDetectedCell As Range
 ' Table styles
 Private Const workerColumnWidth As Double = 5
 Private Const startWorkerColumn As Integer = 6
-Private Const holidayRow As Integer = 3
-Private Const personalCodeRow As Integer = 9
-Private Const departmentRow As Integer = 10
+Private Const statisticsBeginRow As Integer = 3
 
 ' Strings
 Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
@@ -34,7 +32,7 @@ Public Sub Worksheet_Activate()
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
   
   'AbsenceDataLoad
-  TableInitialize
+  'TableInitialize 2023
 End Sub
 
 Private Sub AbsenceDataLoad()
@@ -52,14 +50,21 @@ Proceed:
   ' Get the mitarbeiter and check columns
   workersCodes = absenceList.AllMitarbeiter
   
-  ' Add or remove columns if needed, mantein the custom order!
+  ' Add or remove columns if needed, mantain the custom order!
   ' Display messages if workers where modified
   ' Get absence list for every worker and then populate the respective rows
 
 Abort:
 End Sub
 
-Public Sub TableInitialize()
+Public Sub TableInitialize(year As Integer)
+  ' These declaration are needed when the Sub is called from other Sheets
+  Set sheet = Sheet5
+  Set table = sheet.ListObjects.Item(GAbsencesModifyTableName)
+  Set changesDetectedCell = Range("Sh5_ChangesDetected")
+  Dim startDate, endDate As Date
+  Dim numOfDays, i As Long
+  
   ' Delete every worker column
   If table.ListColumns.Count > (startWorkerColumn - 1) Then
     maxColumn = table.ListColumns.Count
@@ -68,10 +73,17 @@ Public Sub TableInitialize()
     Next i
   End If
   
+  ' Delete all the rows
+  With table
+    If Not .DataBodyRange Is Nothing Then
+      .DataBodyRange.Delete
+    End If
+  End With
+  
   ' Initialize MitarbeiterList class
   Dim workersList As New MitarbeiterList
   
-  ' Get the worker and generate columns
+  ' Get the workers Data
   Dim absenceList As New AbwesenheitsList
   Dim workersCodes() As String
   workersCodes = absenceList.AllMitarbeiter
@@ -92,19 +104,56 @@ Public Sub TableInitialize()
       currentColumn = .Column
     End With
     
-    ' Add maximal holiday days
-    With Cells(holidayRow, currentColumn)
+    ' Urlaubsanspruch Cell
+    With Cells(statisticsBeginRow, currentColumn)
       .Value = workersList.worker.vacationTotal
       .Font.Bold = True
       .HorizontalAlignment = xlHAlignCenter
       .VerticalAlignment = xlVAlignCenter
     End With
     
-    ' Add all the remaining formulas
-    ' with Cells.Formula = "=FORMULA()"
+    ' Resturlaub Cell (FORMULA)
+    With Cells(statisticsBeginRow + 1, currentColumn)
+      .Formula = "=J3-SUM(J5:J8)"
+      .Font.Bold = True
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Nur Urlaub Cell (FORMULA)
+    With Cells(statisticsBeginRow + 2, currentColumn)
+      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=U"")"
+      .Font.Bold = False
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Nur Freizeit Cell (FORMULA)
+    With Cells(statisticsBeginRow + 3, currentColumn)
+      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=F"")"
+      .Font.Bold = False
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Nur Krank Cell (FORMULA)
+    With Cells(statisticsBeginRow + 4, currentColumn)
+      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=K"")"
+      .Font.Bold = False
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
+    
+    ' Nur Sonstiges Cell (FORMULA)
+    With Cells(statisticsBeginRow + 5, currentColumn)
+      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=S"")"
+      .Font.Bold = False
+      .HorizontalAlignment = xlHAlignCenter
+      .VerticalAlignment = xlVAlignCenter
+    End With
     
     ' Add personal code
-    With Cells(personalCodeRow, currentColumn)
+    With Cells(statisticsBeginRow + 6, currentColumn)
       .Value = workersList.worker.personalCode
       .Orientation = xlUpward
       .Font.Size = 10
@@ -113,11 +162,35 @@ Public Sub TableInitialize()
     End With
     
     ' Add department
-    With Cells(departmentRow, currentColumn)
+    With Cells(statisticsBeginRow + 7, currentColumn)
       .Value = workersList.worker.department
       .Font.Size = 8
       .HorizontalAlignment = xlHAlignCenter
       .VerticalAlignment = xlVAlignCenter
     End With
   Next i
+  
+  ' Generate rows with date
+  startDate = DateSerial(year, 1, 1)
+  endDate = DateSerial(year, 12, 31)
+  numOfDays = DateDiff("d", startDate, endDate)
+  For i = 0 To numOfDays
+    table.ListRows.Add
+    table.DataBodyRange((i + 1), 1).Value = startDate + i
+  Next i
+  
+  ' Reset change detected Cell
+  changesDetectedCell.Value = False
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+  'Sh5_PlanSaveBtn.Enabled = False
+  With table ' Monitor changes in the main table
+    If Not .DataBodyRange Is Nothing Then
+      If Not Intersect(Target, .DataBodyRange) Is Nothing Then
+        changesDetectedCell.Value = True
+        'Sh5_PlanSaveBtn.Enabled = True
+      End If
+    End If
+  End With
 End Sub
