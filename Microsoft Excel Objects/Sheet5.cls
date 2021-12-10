@@ -24,6 +24,8 @@ Private Const statisticsBeginRow As Integer = 3
 
 ' Strings
 Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
+Private Const newWorkerAddedText = "Ein neuer Mitarbeiter wurde dem Plan hinzugefugt"
+Private Const workerDeletedText = "Ein Mitarbeiter wurde aus dem Plan gelöscht"
 
 Public Sub Worksheet_Activate()
   Set sheet = Sheet5
@@ -32,7 +34,6 @@ Public Sub Worksheet_Activate()
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
   
   AbsenceDataLoad
-  'TableInitialize 2023
 End Sub
 
 Private Sub AbsenceDataLoad()
@@ -65,31 +66,130 @@ Proceed:
   ' Check if all the workers in DB are in the table, if not then add it
   For Each workerDB In workersCodesDB
     If Not (UBound(Filter(workersCodes, workerDB)) > -1) Then
-      MsgBox "A worker is missing!"
-      'AddWorker workerDB
+      AddWorker CStr(workerDB)
+      MsgBox newWorkerAddedText & vbCrLf & "Mitarbeiter-Nr. " & workerDB
     End If
   Next
   
   ' Check if all the workers in the table are in the DB, if not then delete it
   For Each worker In workersCodes
     If Not (UBound(Filter(workersCodesDB, worker)) > -1) Then
-      MsgBox "A worker must be deleted!"
-      'DeleteWorker workerDB
+      MsgBox workerDeletedText & vbCrLf & "Mitarbeiter-Nr. " & worker
+      DeleteWorker CStr(worker)
     End If
   Next
-
-
-  ' Get absence list for every worker and then populate the respective rows
+  
+  ' TODO: Get absence list for every worker and then populate the respective rows
+  
+  ' Reset change detected Cell
+  changesDetectedCell.Value = False
 
 Abort:
 End Sub
 
 Private Sub AddWorker(workerPCode As String)
+  Dim currentColumn As Long
+  Dim currentColumnAa As String
+  table.ListColumns.Add
   
+  ' Initialize MitarbeiterList class
+  Dim workersList As New MitarbeiterList
+  workersList.Search workerPCode
+  
+  ' Write header
+  With table.HeaderRowRange(1, table.HeaderRowRange.Columns.Count)
+    .Value = workersList.worker.visName
+    .ColumnWidth = workerColumnWidth
+    .Orientation = xlUpward
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+    currentColumn = .Column
+  End With
+  
+  currentColumnAa = columnToLetter(currentColumn)
+  
+  ' Urlaubsanpruch Cell
+  With Cells(statisticsBeginRow, currentColumn)
+    .Value = workersList.worker.vacationTotal
+    .Font.Bold = True
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Resturlaub Cell (FORMULA)
+  With Cells(statisticsBeginRow + 1, currentColumn)
+    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5:" & currentColumnAa & "8)"
+    .Font.Bold = True
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Nur Urlaub Cell (FORMULA)
+  With Cells(statisticsBeginRow + 2, currentColumn)
+    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=U"")"
+    .Font.Bold = False
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Nur Freizeit Cell (FORMULA)
+  With Cells(statisticsBeginRow + 3, currentColumn)
+    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=F"")"
+    .Font.Bold = False
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Nur Krank Cell (FORMULA)
+  With Cells(statisticsBeginRow + 4, currentColumn)
+    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=K"")"
+    .Font.Bold = False
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Nur Sonstiges Cell (FORMULA)
+  With Cells(statisticsBeginRow + 5, currentColumn)
+    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=S"")"
+    .Font.Bold = False
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Add personal code
+  With Cells(statisticsBeginRow + 6, currentColumn)
+    .Value = workersList.worker.personalCode
+    .Orientation = xlUpward
+    .Font.Size = 10
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+
+  ' Add department
+  With Cells(statisticsBeginRow + 7, currentColumn)
+    .Value = workersList.worker.department
+    .Font.Size = 8
+    .HorizontalAlignment = xlHAlignCenter
+    .VerticalAlignment = xlVAlignCenter
+  End With
+  
+  ' Reset changes detected
+  changesDetectedCell.Value = False
 End Sub
 
 Private Sub DeleteWorker(workerPCode As String)
-
+  ' Get the workers from the table
+  Dim startCol, endCol As Integer
+  startCol = table.HeaderRowRange(1, startWorkerColumn).Column
+  endCol = table.HeaderRowRange(1, table.DataBodyRange.Columns.Count).Column
+  For i = startCol To endCol
+    If CStr(Cells(statisticsBeginRow + 6, i).Value) = workerPCode Then
+      sheet.Columns(i).EntireColumn.Delete
+    End If
+  Next i
+  
+  ' Reset changes detected
+  changesDetectedCell.Value = False
 End Sub
 
 Public Sub TableInitialize(year As Integer)
@@ -115,94 +215,15 @@ Public Sub TableInitialize(year As Integer)
     End If
   End With
   
-  ' Initialize MitarbeiterList class
-  Dim workersList As New MitarbeiterList
-  
   ' Get the workers Data
   Dim absenceList As New AbwesenheitsList
   Dim workersCodes() As String
   workersCodes = absenceList.AllMitarbeiter
-  Dim currentColumn As Integer
   
   ' Generate columns for every worker
   For i = LBound(workersCodes) To UBound(workersCodes)
-    table.ListColumns.Add
-    
-    workersList.Search workersCodes(i)
-    With table.HeaderRowRange(1, i + startWorkerColumn)
-      .Value = workersList.worker.visName
-      .ColumnWidth = workerColumnWidth
-      .Orientation = xlUpward
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-      
-      currentColumn = .Column
-    End With
-    
-    ' Urlaubsanspruch Cell
-    With Cells(statisticsBeginRow, currentColumn)
-      .Value = workersList.worker.vacationTotal
-      .Font.Bold = True
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Resturlaub Cell (FORMULA)
-    With Cells(statisticsBeginRow + 1, currentColumn)
-      .Formula = "=J3-SUM(J5:J8)"
-      .Font.Bold = True
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Nur Urlaub Cell (FORMULA)
-    With Cells(statisticsBeginRow + 2, currentColumn)
-      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=U"")"
-      .Font.Bold = False
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Nur Freizeit Cell (FORMULA)
-    With Cells(statisticsBeginRow + 3, currentColumn)
-      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=F"")"
-      .Font.Bold = False
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Nur Krank Cell (FORMULA)
-    With Cells(statisticsBeginRow + 4, currentColumn)
-      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=K"")"
-      .Font.Bold = False
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Nur Sonstiges Cell (FORMULA)
-    With Cells(statisticsBeginRow + 5, currentColumn)
-      .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=S"")"
-      .Font.Bold = False
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Add personal code
-    With Cells(statisticsBeginRow + 6, currentColumn)
-      .Value = workersList.worker.personalCode
-      .Orientation = xlUpward
-      .Font.Size = 10
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
-    
-    ' Add department
-    With Cells(statisticsBeginRow + 7, currentColumn)
-      .Value = workersList.worker.department
-      .Font.Size = 8
-      .HorizontalAlignment = xlHAlignCenter
-      .VerticalAlignment = xlVAlignCenter
-    End With
+    'Debug.Print CStr(workersCodes(i))
+    AddWorker CStr(workersCodes(i))
   Next i
   
   ' Generate rows with date
