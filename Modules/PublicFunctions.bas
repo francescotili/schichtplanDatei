@@ -41,8 +41,12 @@ Public Function saveHistory(Optional eventName As String = "Unspecified event de
   newHistoryEntry.Save
 End Function
 
+Public Function columnToLetter(lngCol As Long) As String
+  Dim vArr
+  vArr = Split(Cells(1, lngCol).Address(True, False), "$")
+  columnToLetter = vArr(0)
+End Function
+
 Public Sub test()
   MsgBox "Click!"
 End Sub
-
-
