@@ -47,9 +47,15 @@ Private Sub AbsenceDataLoad()
   End If
 
 Proceed:
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+
   Dim absenceList As New AbwesenheitsList
   Dim workersCodesDB() As String
   Dim workersCodes() As String
+  Dim workerAbsence() As String
+  Dim workerCol As Integer
   
   ' Get the workers from database
   workersCodesDB = absenceList.AllMitarbeiter
@@ -79,10 +85,38 @@ Proceed:
     End If
   Next
   
-  ' TODO: Get absence list for every worker and then populate the respective rows
+  ' Populate the data with new content
+  For Each workerDB In workersCodesDB
+    ' Get content for the worker
+    workerAbsence = absenceList.Mitarbeiter(CStr(workerDB))
+    
+    ' Find the worker column
+    For i = 0 To table.DataBodyRange.Columns.Count - 6
+      If CStr(workerDB) = CStr(Cells(statisticsBeginRow + 6, startWorkerColumn + 4 + i).Value) Then
+        workerCol = startWorkerColumn + i
+        Exit For
+      End If
+    Next i
+    
+    ' Populate the respective rows
+    table.ListColumns(workerCol).DataBodyRange.ClearContents
+    For j = 1 To table.DataBodyRange.Rows.Count
+      If Len(workerAbsence(j - 1)) <> 0 Then
+        table.DataBodyRange(j, workerCol).Value = workerAbsence(j - 1)
+      Else
+        If Len(table.DataBodyRange(j, workerCol).Value) <> 0 Then
+          table.DataBodyRange(j, workerCol).ClearContent
+        End If
+      End If
+    Next j
+  Next
   
   ' Reset change detected Cell
   changesDetectedCell.Value = False
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 
 Abort:
 End Sub
@@ -108,7 +142,7 @@ Private Sub AddWorker(workerPCode As String)
   
   currentColumnAa = columnToLetter(currentColumn)
   
-  ' Header border
+  ' File header border
   With Cells(1, currentColumn).Borders(xlEdgeBottom)
     .LineStyle = XlLineStyle.xlContinuous
     .Color = RGB(0, 154, 155)
@@ -125,7 +159,7 @@ Private Sub AddWorker(workerPCode As String)
 
   ' Resturlaub Cell (FORMULA)
   With Cells(statisticsBeginRow + 1, currentColumn)
-    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5:" & currentColumnAa & "8)"
+    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5;" & currentColumnAa & "6;" & currentColumnAa & "8)"
     .Font.Bold = True
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
@@ -207,6 +241,10 @@ Public Sub TableInitialize(year As Integer)
   Dim startDate, endDate As Date
   Dim numOfDays, i As Long
   
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
   ' Delete every worker column
   If table.ListColumns.Count > (startWorkerColumn - 1) Then
     maxColumn = table.ListColumns.Count
@@ -243,12 +281,16 @@ Public Sub TableInitialize(year As Integer)
   
   ' Reset change detected Cell
   changesDetectedCell.Value = False
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
-  'Sh5_PlanSaveBtn.Enabled = False
+  Sh5_PlanSaveBtn.Enabled = False
   If Target.row > 11 Then ' Everything under Row 11 will trigger
     changesDetectedCell.Value = True
-    'Sh5_PlanSaveBtn.Enabled = True
+    Sh5_PlanSaveBtn.Enabled = True
   End If
 End Sub

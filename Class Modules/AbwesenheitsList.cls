@@ -71,7 +71,7 @@ Public Sub GenerateYear(year As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT")
+  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÃœCKGESETZT")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -104,8 +104,26 @@ Public Sub WorkerDelete(Optional personalCode As String = "null")
   sheet.Protect Password:=GAdminPassword
 End Sub
 
-Property Get GetMitarbeiter(personalCode As String) As String()
+Property Get Mitarbeiter(personalCode As String) As String()
+  Dim response() As String
+  Dim numOfDays As Integer
+  Dim workerCol As Integer
+  Dim i As Long
   
+  ' Search column of worker
+  For i = 2 To table.HeaderRowRange.Columns.Count
+    If table.HeaderRowRange(1, i) = personalCode Then
+      workerCol = i
+    End If
+  Next i
+  
+  ' Get worker absence days
+  ReDim response(table.DataBodyRange.Rows.Count - 1)
+  For i = 1 To table.DataBodyRange.Rows.Count
+    response(i - 1) = table.DataBodyRange(i, workerCol)
+  Next i
+  
+  Mitarbeiter = response
 End Property
 
 Public Property Get AllMitarbeiter() As String()
