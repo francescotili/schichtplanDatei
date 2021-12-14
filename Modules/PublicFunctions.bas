@@ -50,3 +50,7 @@ End Function
 Public Sub test()
   MsgBox "Click!"
 End Sub
+
+Public Sub notYetReady()
+  MsgBox "Funktion noch nicht implementiert"
+End Sub
