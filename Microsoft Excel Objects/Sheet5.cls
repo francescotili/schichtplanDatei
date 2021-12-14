@@ -8,9 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 ' --------------------------------------------
-' ABSENCE MANAGER PUBLIC FUNCTIONS
+' ABSENCE MANAGER FUNCTIONS
 ' Manage methods for getting all the data for
 ' Sheet5 (Abwesenheitsplan)
+' --------------------------------------------
+' TODO LIST
+' 1. Custom ordering of workers
+' 2. Collapsible detail of holidays (rows 5-8)
 ' --------------------------------------------
 Public sheet As Worksheet
 Private table As ListObject
