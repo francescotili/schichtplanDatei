@@ -108,6 +108,13 @@ Private Sub AddWorker(workerPCode As String)
   
   currentColumnAa = columnToLetter(currentColumn)
   
+  ' Header border
+  With Cells(1, currentColumn).Borders(xlEdgeBottom)
+    .LineStyle = XlLineStyle.xlContinuous
+    .Color = RGB(0, 154, 155)
+    .Weight = xlThick
+  End With
+  
   ' Urlaubsanpruch Cell
   With Cells(statisticsBeginRow, currentColumn)
     .Value = workersList.worker.vacationTotal
@@ -222,7 +229,6 @@ Public Sub TableInitialize(year As Integer)
   
   ' Generate columns for every worker
   For i = LBound(workersCodes) To UBound(workersCodes)
-    'Debug.Print CStr(workersCodes(i))
     AddWorker CStr(workersCodes(i))
   Next i
   
