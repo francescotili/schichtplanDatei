@@ -25,6 +25,7 @@ Private Const savingDataWarningText = "Möchten Sie den Schichtplan wirklich spe
 
 Private Sub Sh2_WeekSaveBtn_Click()
   WeekDataSave
+  Range("G7").Select
 End Sub
 
 Public Sub Worksheet_Activate()
@@ -51,6 +52,10 @@ Public Sub WeekDataLoad()
   End If
 
 Proceed:
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
   ' Get the week data
   weekNumber = CInt(weekToLoadCell.Value)
   activeWeekCell.Value = weekNumber
@@ -67,6 +72,10 @@ Proceed:
       SetCustomMode
       Populate Monday
   End Select
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword, AllowFormattingColumns:=True
 Abort:
 End Sub
 
@@ -83,7 +92,11 @@ Private Sub WeekDataSave()
   Case WeekStatus.Emtpy, WeekStatus.Normal
     Dim msgAnswer As Integer
     msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
-    If msgAnswer = vbYes Then Save WeekDay.Unknown
+    If msgAnswer = vbYes Then
+      Sheet1.Unprotect Password:=GAdminPassword
+      Save WeekDay.Unknown
+      Sheet1.Protect Password:=GAdminPassword
+    End If
   End Select
 End Sub
 
@@ -219,7 +232,7 @@ Private Sub Populate(passedDay As WeekDay)
   
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
-'  sheet.Unprotect Password:=GAdminPassword
+  sheet.Unprotect Password:=GAdminPassword
   EmptyPlan
   
   ' Set variable for the view
@@ -302,7 +315,7 @@ Private Sub Populate(passedDay As WeekDay)
   
   ' Enable screen updating and protection
   Application.ScreenUpdating = True
-'  sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=GAdminPassword
 End Sub
 
 Public Sub ToggleMode()
