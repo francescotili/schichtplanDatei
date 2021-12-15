@@ -112,7 +112,7 @@ Proceed:
         table.DataBodyRange(j, workerCol).Value = workerAbsence(j - 1)
       Else
         If Len(table.DataBodyRange(j, workerCol).Value) <> 0 Then
-          table.DataBodyRange(j, workerCol).ClearContent
+          table.DataBodyRange(j, workerCol).ClearContents
         End If
       End If
     Next j
@@ -125,6 +125,52 @@ Proceed:
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword, AllowFormattingColumns:=True
 
+Abort:
+End Sub
+
+Private Sub Sh5_PlanSaveBtn_Click()
+  AbsenceDataSave
+End Sub
+
+Private Sub AbsenceDataSave()
+  answer = MsgBox("BLUP!", vbExclamation + vbYesNo, "ACHTUNG")
+  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+
+Proceed:
+  Dim i, j As Long
+  Dim absenceList As New AbwesenheitsList
+  Dim workersCodesDB() As String
+  Dim workerAbsence() As String
+  ReDim workerAbsence(table.DataBodyRange.Rows.Count - 1)
+  
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  absenceList.ProtectionOFF
+  
+  ' Get the workers from database
+  workersCodesDB = absenceList.AllMitarbeiter
+  
+  ' Scan every worker and save data
+  For Each workerDB In workersCodesDB
+    For i = startWorkerColumn To table.DataBodyRange.Columns.Count
+      If Cells(statisticsBeginRow + 6, table.HeaderRowRange(1, i).Column) = CStr(workerDB) Then
+        For j = 1 To table.DataBodyRange.Rows.Count
+          workerAbsence(j - 1) = table.DataBodyRange(j, i)
+        Next j
+        absenceList.Save CStr(workerDB), workerAbsence
+      End If
+    Next i
+  Next
+  
+  ' Reset change detected Cell
+  changesDetectedCell.Value = False
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword, AllowFormattingColumns:=True
+  absenceList.ProtectionON
+  
 Abort:
 End Sub
 

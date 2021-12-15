@@ -104,7 +104,7 @@ Public Sub WorkerDelete(Optional personalCode As String = "null")
   sheet.Protect Password:=GAdminPassword
 End Sub
 
-Property Get Mitarbeiter(personalCode As String) As String()
+Public Property Get Mitarbeiter(personalCode As String) As String()
   Dim response() As String
   Dim numOfDays As Integer
   Dim workerCol As Integer
@@ -139,3 +139,34 @@ Public Property Get AllMitarbeiter() As String()
   
   AllMitarbeiter = response
 End Property
+
+Public Sub Save(passedCode As String, absenceData() As String)
+  Dim workerCol As Integer
+  Dim i, j As Long
+  
+  ' Search column of worker
+  For i = 2 To table.HeaderRowRange.Columns.Count
+    If table.HeaderRowRange(1, i) = passedCode Then
+      workerCol = i
+      
+      ' Save data
+      For j = LBound(absenceData) To UBound(absenceData)
+        If Len(absenceData(j)) <> 0 Then
+          table.DataBodyRange(j + 1, workerCol) = absenceData(j)
+        Else
+          If Len(table.DataBodyRange(j + 1, workerCol).Value) <> 0 Then
+            table.DataBodyRange(j + 1, workerCol).ClearContents
+          End If
+        End If
+      Next j
+    End If
+  Next i
+End Sub
+
+Public Sub ProtectionOFF()
+  sheet.Unprotect Password:=GAdminPassword
+End Sub
+
+Public Sub ProtectionON()
+  sheet.Protect Password:=GAdminPassword
+End Sub

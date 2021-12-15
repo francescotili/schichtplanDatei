@@ -115,7 +115,7 @@ Public Sub Save(newWorker As Mitarbeiter)
       table.DataBodyRange(1, (j + 1)).Value = entry(j)
     Next j
     ' Update history
-    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugefügt")
+    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugef�gt")
     ' Add the new worker in the Vacation Plan
     Dim vacationList As New AbwesenheitsList
     vacationList.WorkerAdd newWorker

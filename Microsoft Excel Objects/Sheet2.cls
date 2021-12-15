@@ -88,13 +88,6 @@ Private Sub WeekDataSave()
 End Sub
 
 Public Sub Save(passedDay As WeekDay)
-  ' Read every schicht for the day or selected days
-  ' Define two cases for empty/normal and for custom
-  '   If normal
-  '     Build SchichtDay object varying the date component and save them every step
-  '   If custom
-  '     Build SchichtDay object based on the days selected and save them every step
-  
   Dim startRow As Integer
   Dim shiftsStartCol, startWorkPlace, endWorkPlace As Integer
   Dim workPlaces(3, 32) As String
@@ -322,7 +315,7 @@ Public Sub ToggleMode()
 ToggleMode:
   Select Case weekStatusCell.Value
     Case WeekStatus.Emtpy
-      SetNormalMode
+      SetCustomMode
     Case WeekStatus.Normal
       SetCustomMode
     Case WeekStatus.Custom

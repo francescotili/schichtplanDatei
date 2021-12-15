@@ -20,5 +20,6 @@ Private Sub Workbook_Open()
   ' This function will ignore Worksheets without Public Activate() subs.
   On Error Resume Next
   Call Sheet2.Worksheet_Activate ' Week bearbeiten
+  Call Sheet5.Worksheet_Activate ' Absence bearbeiten
   On Error GoTo 0
 End Sub
