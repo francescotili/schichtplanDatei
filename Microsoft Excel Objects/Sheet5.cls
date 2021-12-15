@@ -12,14 +12,12 @@ Attribute VB_Exposed = True
 ' Manage methods for getting all the data for
 ' Sheet5 (Abwesenheitsplan)
 ' --------------------------------------------
-' TODO LIST
-' 1. Collapsible detail of holidays (rows 5-8)
-' --------------------------------------------
+
 Public sheet As Worksheet
 Private table As ListObject
 
-Private changesDetectedCell, selectedColCell As Range
-Private moveColRBtn, moveColLBtn As Shape
+Private changesDetectedCell, detailsHiddenCell As Range
+Private moveColRBtn, moveColLBtn, toggleDetails As Shape
 
 ' Table styles
 Private Const workerColumnWidth As Double = 5
@@ -38,8 +36,10 @@ Public Sub Worksheet_Activate()
   
   Set moveColRBtn = Me.sheet.Shapes("Sh5_MoveColRightBtn")
   Set moveColLBtn = Me.sheet.Shapes("Sh5_MoveColLeftBtn")
+  Set toggleDetails = Me.sheet.Shapes("Sh5_ToggleDtailsVisBtn")
   
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
+  Set detailsHiddenCell = Range("Sh5_DetailHidden")
   
   AbsenceDataLoad
 End Sub
@@ -167,6 +167,9 @@ Proceed:
   
   ' Reset change detected Cell
   changesDetectedCell.Value = False
+  
+  ' Log event in History
+  saveHistory ("Der Abwesenheitsplan wurde geändert")
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -376,6 +379,7 @@ End Sub
 Public Sub MoveColToRight()
   Dim activeCol As Long
   
+  sheet.Unprotect Password:=GAdminPassword
   activeCol = CLng(ActiveCell.Column)
   sheet.Columns(activeCol).Cut
   sheet.Columns(activeCol + 2).Insert
@@ -388,6 +392,7 @@ End Sub
 Public Sub MoveColToLeft()
   Dim activeCol As Long
   
+  sheet.Unprotect Password:=GAdminPassword
   activeCol = CLng(ActiveCell.Column)
   sheet.Columns(activeCol).Cut
   sheet.Columns(activeCol - 1).Insert
@@ -406,4 +411,21 @@ Private Sub RestoreButtons()
     .Width = 15
     .Left = ActiveCell.Left - 5
   End With
+  sheet.Protect Password:=GAdminPassword
+End Sub
+
+Public Sub ToggleDetailsVisibility()
+  If detailsHiddenCell.Value = True Then
+    sheet.Unprotect Password:=GAdminPassword
+    Rows("5:8").EntireRow.Hidden = True
+    toggleDetails.TextFrame.Characters.Text = "+"
+    detailsHiddenCell.Value = False
+    sheet.Protect Password:=GAdminPassword
+  Else
+    sheet.Unprotect Password:=GAdminPassword
+    Rows("5:8").EntireRow.Hidden = False
+    toggleDetails.TextFrame.Characters.Text = "–"
+    detailsHiddenCell.Value = True
+    sheet.Protect Password:=GAdminPassword
+  End If
 End Sub
