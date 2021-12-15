@@ -14,6 +14,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub SaveButton_Click()
+  Application.ScreenUpdating = False
+  Sheet1.Unprotect Password:=GAdminPassword
   If Me.MoCheckbox.Value Then
     Sheet2.Save Monday
     Sheet2.WeekDataLoad
@@ -34,6 +36,10 @@ Private Sub SaveButton_Click()
     Sheet2.Save Friday
     Sheet2.WeekDataLoad
   End If
+  Sheet2.Unprotect Password:=GAdminPassword
+  Application.ScreenUpdating = True
+    
+  Unload Me
 End Sub
 
 Private Sub UserForm_Activate()
