@@ -30,6 +30,7 @@ Private Const statisticsBeginRow As Integer = 3
 Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
 Private Const newWorkerAddedText = "Ein neuer Mitarbeiter wurde dem Plan hinzugefugt"
 Private Const workerDeletedText = "Ein Mitarbeiter wurde aus dem Plan gelöscht"
+Private Const savingDataWarningText = "Möchten Sie den Abwesenheitplan wirklich speichern?" & vbCrLf & "Vorhandene Daten werden überschrieben!"
 
 Public Sub Worksheet_Activate()
   Set sheet = Sheet5
@@ -133,8 +134,9 @@ Private Sub Sh5_PlanSaveBtn_Click()
 End Sub
 
 Private Sub AbsenceDataSave()
-  answer = MsgBox("BLUP!", vbExclamation + vbYesNo, "ACHTUNG")
-  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  Dim msgAnswer As Integer
+  msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
+  If msgAnswer = vbYes Then GoTo Proceed Else GoTo Abort
 
 Proceed:
   Dim i, j As Long
