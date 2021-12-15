@@ -13,14 +13,13 @@ Attribute VB_Exposed = True
 ' Sheet5 (Abwesenheitsplan)
 ' --------------------------------------------
 ' TODO LIST
-' 1. Disable moving columns button when it is
-'    at limits of table
-' 2. Collapsible detail of holidays (rows 5-8)
+' 1. Collapsible detail of holidays (rows 5-8)
 ' --------------------------------------------
 Public sheet As Worksheet
 Private table As ListObject
 
 Private changesDetectedCell, selectedColCell As Range
+Private moveColRBtn, moveColLBtn As Shape
 
 ' Table styles
 Private Const workerColumnWidth As Double = 5
@@ -36,8 +35,10 @@ Public Sub Worksheet_Activate()
   Set sheet = Sheet5
   Set table = sheet.ListObjects.Item(GAbsencesModifyTableName)
   
+  Set moveColRBtn = Me.sheet.Shapes("Sh5_MoveColRightBtn")
+  Set moveColLBtn = Me.sheet.Shapes("Sh5_MoveColLeftBtn")
+  
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
-  Set selectedColCell = Range("Sh5_SelectedCol")
   
   AbsenceDataLoad
 End Sub
@@ -55,7 +56,7 @@ Private Sub AbsenceDataLoad()
 Proceed:
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
-  'sheet.Unprotect Password:=GAdminPassword
+  sheet.Unprotect Password:=GAdminPassword
 
   Dim absenceList As New AbwesenheitsList
   Dim workersCodesDB() As String
@@ -302,13 +303,26 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-  If Target.Column > 9 Then
-    sheet5.Shapes("Sh5_MoveColRightBtn").Left = Target.Left + 20
-    sheet5.Shapes("Sh5_MoveColLeftBtn").Left = Target.Left - 5
-    selectedColCell.Value = Target.Column
-  Else
-    selectedColCell.ClearContents
-  End If
+  Select Case Target.Column
+  Case Is < 10
+    moveColRBtn.Visible = msoFalse
+    moveColLBtn.Visible = msoFalse
+  Case Is = 10
+    moveColRBtn.Visible = msoTrue
+    moveColLBtn.Visible = msoFalse
+  Case Is < (table.DataBodyRange.Columns.Count + 4)
+    moveColRBtn.Visible = msoTrue
+    moveColLBtn.Visible = msoTrue
+  Case Is = (table.DataBodyRange.Columns.Count + 4)
+    moveColRBtn.Visible = msoFalse
+    moveColLBtn.Visible = msoTrue
+  Case Is > (table.DataBodyRange.Columns.Count + 4)
+    moveColRBtn.Visible = msoFalse
+    moveColLBtn.Visible = msoFalse
+  End Select
+  
+  moveColRBtn.Left = Target.Left + 20
+  moveColLBtn.Left = Target.Left - 5
 End Sub
 
 Public Sub MoveColToRight()
@@ -329,7 +343,7 @@ Public Sub MoveColToLeft()
   activeCol = CLng(ActiveCell.Column)
   sheet.Columns(activeCol).Cut
   sheet.Columns(activeCol - 1).Insert
-  sheet.Columns(activeCol).ColumnWidth = workerColumnWidth
+  sheet.Columns(activeCol + 1).ColumnWidth = workerColumnWidth
   sheet.Columns(activeCol - 1).Select
   
   RestoreButtons
