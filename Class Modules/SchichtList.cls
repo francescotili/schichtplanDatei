@@ -73,7 +73,13 @@ Public Sub WeekSave(passedData As SchichtDay)
     ' Save the row
     table.DataBodyRange(rowToSave, 2).Value = passedData.shiftStatus
     For j = 4 To 36 ' Columns for every workplace
-      table.DataBodyRange(rowToSave, j).Value = passedData.workPlace(j - 4)
+      If Len(passedData.workPlace(j - 4)) <> 0 Then
+        table.DataBodyRange(rowToSave, j).Value = passedData.workPlace(j - 4)
+      Else
+        If Len(table.DataBodyRange(rowToSave, j).Value) <> 0 Then
+          table.DataBodyRange(rowToSave, j).ClearContents
+        End If
+      End If
     Next j
   End If
 End Sub
