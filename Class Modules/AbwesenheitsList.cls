@@ -126,13 +126,44 @@ Public Property Get Mitarbeiter(personalCode As String) As String()
   Mitarbeiter = response
 End Property
 
+Public Property Get DayAbsences(passedDate As Date) As String()
+  Dim response() As String
+  Dim numOfAbsence As Integer
+  Dim i, j, dayRow As Long
+  
+  ' Find the row
+  For i = 1 To table.DataBodyRange.Rows.Count
+    If table.DataBodyRange(i, 1).Value = passedDate Then
+      dayRow = i
+      Exit For
+    End If
+  Next i
+  
+  ' Retrieve data and build the response
+  numOfAbsence = 0
+  For i = 2 To table.DataBodyRange.Columns.Count
+    If table.DataBodyRange(dayRow, i).Value <> "" Then
+      numOfAbsence = numOfAbsence + 1
+      ReDim Preserve response(numOfAbsence - 1)
+      response(numOfAbsence - 1) = CStr(table.HeaderRowRange(1, i).Value)
+    End If
+  Next i
+  
+  If numOfAbsence = 0 Then
+    ReDim response(0)
+    response(0) = "0"
+  End If
+  
+  DayAbsences = response
+End Property
+
 Public Property Get AllMitarbeiter() As String()
   Dim response() As String
   Dim numOfWorkers As Integer
   Dim i As Long
   
-  numOfWorkers = table.DataBodyRange.Columns.Count - 2
-  ReDim response(numOfWorkers)
+  numOfWorkers = table.DataBodyRange.Columns.Count - 1
+  ReDim response(numOfWorkers - 1)
   For i = 2 To table.DataBodyRange.Columns.Count
     response(i - 2) = table.HeaderRowRange(1, i)
   Next i
