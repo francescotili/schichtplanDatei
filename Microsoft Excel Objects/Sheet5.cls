@@ -144,6 +144,7 @@ Proceed:
   Dim workersCodesDB() As String
   Dim workerAbsence() As String
   ReDim workerAbsence(table.DataBodyRange.Rows.Count - 1)
+  Dim modCounter As Long
   
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
@@ -342,7 +343,7 @@ Public Sub TableInitialize(year As Integer)
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
-  sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -411,7 +412,7 @@ Private Sub RestoreButtons()
     .Width = 15
     .Left = ActiveCell.Left - 5
   End With
-  sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 End Sub
 
 Public Sub ToggleDetailsVisibility()
@@ -420,12 +421,12 @@ Public Sub ToggleDetailsVisibility()
     Rows("5:8").EntireRow.Hidden = True
     toggleDetails.TextFrame.Characters.Text = "+"
     detailsHiddenCell.Value = False
-    sheet.Protect Password:=GAdminPassword
+    sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
   Else
     sheet.Unprotect Password:=GAdminPassword
     Rows("5:8").EntireRow.Hidden = False
     toggleDetails.TextFrame.Characters.Text = "–"
     detailsHiddenCell.Value = True
-    sheet.Protect Password:=GAdminPassword
+    sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
   End If
 End Sub
