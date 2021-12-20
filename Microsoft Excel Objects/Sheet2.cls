@@ -68,10 +68,8 @@ Proceed:
       SetEmptyMode
     Case WeekStatus.Normal
       SetNormalMode
-      Populate Monday
     Case WeekStatus.Custom
       SetCustomMode
-      Populate Monday
   End Select
   
   ' Get the absence data
