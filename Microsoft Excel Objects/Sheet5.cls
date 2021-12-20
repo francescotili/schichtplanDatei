@@ -218,7 +218,7 @@ Private Sub AddWorker(workerPCode As String)
 
   ' Resturlaub Cell (FORMULA)
   With Cells(statisticsBeginRow + 1, currentColumn)
-    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5;" & currentColumnAa & "6;" & currentColumnAa & "8)"
+    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5," & currentColumnAa & "6," & currentColumnAa & "8)"
     .Font.Bold = True
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
@@ -303,6 +303,7 @@ Public Sub TableInitialize(year As Integer)
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
+  ProtectShapes
   
   ' Delete every worker column
   If table.ListColumns.Count > (startWorkerColumn - 1) Then
@@ -322,7 +323,7 @@ Public Sub TableInitialize(year As Integer)
   ' Get the workers Data
   Dim absenceList As New AbwesenheitsList
   Dim workersCodes() As String
-  workersCodes = absenceList.AllMitarbeiter
+  workersCodes = absenceList.AllMitarbeiter ' PROBLEMA QUA! NON CI SONO PIU´ GLI OPERAI NO!? DEVO PRENDERLI DA MITARBEITER LIST!
   
   ' Generate columns for every worker
   For i = LBound(workersCodes) To UBound(workersCodes)
@@ -415,6 +416,11 @@ Private Sub RestoreButtons()
   sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 End Sub
 
+Private Sub ProtectShapes()
+  sheet.Shapes("Sh5_MoveColRightBtn").Left = 0
+  sheet.Shapes("Sh5_MoveColLeftBtn").Left = 0
+End Sub
+
 Public Sub ToggleDetailsVisibility()
   If detailsHiddenCell.Value = True Then
     sheet.Unprotect Password:=GAdminPassword
@@ -430,3 +436,4 @@ Public Sub ToggleDetailsVisibility()
     sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
   End If
 End Sub
+
