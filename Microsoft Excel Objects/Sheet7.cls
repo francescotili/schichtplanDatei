@@ -13,9 +13,10 @@ Attribute VB_Exposed = True
 ' Sheet7 (ÜB Woche)
 ' --------------------------------------------
 Public sheet As Worksheet
+Private weekData As Collection
 Private weekNumber As Double
 
-Private weekToLoadCell, activeWeekCell, actualYearCell As Range
+Private weekToLoadCell, activeWeekCell, actualYearCell, weekStatusCell, weekStatusLabel As Range
 
 Public Sub Worksheet_Activate()
   Set sheet = Sheet7
@@ -24,6 +25,7 @@ Public Sub Worksheet_Activate()
   Set activeWeekCell = Range("Sh7_ActiveWeek")
   Set weekStatusCell = Range("Sh7_WeekStatusCell")
   Set actualYearCell = Sheet3.Range("Global_ActualYear")
+  Set weekStatusLabel = Range("Sh7_WeekStatusLabel")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
@@ -35,11 +37,18 @@ Public Sub WeekDataLoad()
   
   ' Get the week data
   weekNumber = CInt(weekToLoadCell.Value)
-'  activeWeekCell.Value = weekNumber
-'  Load
+  activeWeekCell.Value = weekNumber
+  ShiftDataLoad
   
   ' Workflow based on week status (read at monday)
-'  TODO!
+  Select Case weekData.Item(WeekDay.Monday).shiftStatus
+    Case WeekStatus.Emtpy
+      SetEmptyMode
+    Case WeekStatus.Normal
+      SetNormalMode
+    Case WeekStatus.Custom
+      SetCustomMode
+  End Select
 
   ' Get the absence data
   AbsenceDataLoad
@@ -99,7 +108,6 @@ Private Sub AbsenceDataLoad()
         workersNames(j) = workerList.worker.visName
       Next j
       
-      Debug.Print UBound(workersNames)
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
       Next j
@@ -116,4 +124,69 @@ Private Sub AbsenceDataLoad()
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
+End Sub
+
+Public Sub ShiftDataLoad()
+  Dim shiftList As New SchichtList
+  
+  ' Get the week data
+  shiftList.WeekRead weekNumber
+  Set weekData = shiftList.weekData
+End Sub
+
+Private Sub Populate(passedDay As WeekDay)
+  ' This function take the day of the week and populate the various
+  ' sections of the Worksheet.
+  ' Warning: before calling this function, please load and pass the right data!
+  
+  Dim startRow, startCol As Integer
+  Dim numOfWorkplaces As Integer
+  Dim i, j As Long
+  
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  EmptyPlan
+  
+  ' Set variable for the view
+  startCol = 9 ' Columnn I
+  startRow = 6
+  numOfWorkplaces = Sheet1.ListObjects(GShiftsTableName).DataBodyRange.Columns.Count - 3
+  For i = 1 To numOfWorkplaces
+    For j = 1 To 4
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i - 1))) <> 0 Then
+        sheet.Cells((startRow + 2 * (i - 1)), (startCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i - 1))
+      End If
+    Next j
+  Next i
+  
+  ' Enable screen updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
+End Sub
+
+Private Sub EmptyPlan()
+  Dim shiftStartCell, shiftEndCell As String
+  
+  shiftStartCell = "I6"
+  shiftEndCell = "R71"
+  Range(shiftStartCell & ":" & shiftEndCell).ClearContents
+End Sub
+
+Private Sub SetNormalMode()
+  weekStatusCell.Value = WeekStatus.Normal
+  weekStatusLabel.Value = "Regelmäßige Woche"
+  Populate Monday
+End Sub
+
+Private Sub SetCustomMode()
+  weekStatusCell.Value = WeekStatus.Custom
+  weekStatusLabel.Value = "Unregelmäßige Woche"
+  EmptyPlan
+End Sub
+
+Private Sub SetEmptyMode()
+  weekStatusCell.Value = WeekStatus.Emtpy
+  weekStatusLabel.Value = "Leere Woche"
+  EmptyPlan
 End Sub
