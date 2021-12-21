@@ -323,7 +323,7 @@ Public Sub TableInitialize(year As Integer)
   ' Get the workers Data
   Dim absenceList As New AbwesenheitsList
   Dim workersCodes() As String
-  workersCodes = absenceList.AllMitarbeiter ' PROBLEMA QUA! NON CI SONO PIU´ GLI OPERAI NO!? DEVO PRENDERLI DA MITARBEITER LIST!
+  workersCodes = absenceList.AllMitarbeiter
   
   ' Generate columns for every worker
   For i = LBound(workersCodes) To UBound(workersCodes)
