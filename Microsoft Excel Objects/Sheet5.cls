@@ -339,6 +339,9 @@ Public Sub TableInitialize(year As Integer)
     table.DataBodyRange((i + 1), 1).Value = startDate + i
   Next i
   
+  ' Reset conditional formatting
+  ResetConditionalFormatting
+  
   ' Reset change detected Cell
   changesDetectedCell.Value = False
 
@@ -437,3 +440,108 @@ Public Sub ToggleDetailsVisibility()
   End If
 End Sub
 
+Private Sub ResetConditionalFormatting()
+  Dim tempRange As Range
+  
+  ' Delete preexistent conditional formatting
+  table.DataBodyRange.FormatConditions.Delete
+  
+  ' Add conditional formatting for months
+  Set tempRange = Range(table.DataBodyRange(1, 1).Address & ":" & table.DataBodyRange(table.DataBodyRange.Rows.Count, 3).Address)
+  With tempRange
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=WEEKDAY($E12;11)>5"
+    With .FormatConditions(1)
+      .StopIfTrue = False
+      .Font.Color = RGB(0, 154, 155)
+    End With
+  End With
+  
+  ' Add conditional formatting for months dividers
+  Set tempRange = Range(table.DataBodyRange(1, 1).Address & ":" & table.DataBodyRange(table.DataBodyRange.Rows.Count, table.DataBodyRange.Columns.Count).Address)
+  With tempRange
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=$G12<>$G13"
+    With .FormatConditions(2)
+      .StopIfTrue = False
+      With .Borders.Item(4)
+        .LineStyle = xlContinuous
+        .Color = RGB(0, 100, 112)
+      End With
+    End With
+  End With
+  
+  ' Add conditional formatting for week divider
+  Set tempRange = Range(table.DataBodyRange(1, 1).Address & ":" & table.DataBodyRange(table.DataBodyRange.Rows.Count, table.DataBodyRange.Columns.Count).Address)
+  With tempRange
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=$F12<>$F13"
+    With .FormatConditions(3)
+      .StopIfTrue = False
+      With .Borders.Item(4)
+        .LineStyle = xlDashDot
+        .Color = RGB(0, 154, 155)
+      End With
+    End With
+  End With
+  
+  ' Add conditional formatting for vacation type, if workers exist
+  If table.DataBodyRange.Columns.Count > 5 Then
+    Set tempRange = Range(table.DataBodyRange(1, 6).Address & ":" & table.DataBodyRange(table.DataBodyRange.Rows.Count, table.DataBodyRange.Columns.Count).Address)
+    
+    With tempRange
+      .Orientation = xlHorizontal ' Reset text orientation
+      .Locked = False ' Reset Locked status
+      
+      ' Add conditional formatting for vacation type S (Sonstiges)
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J12=""S"""
+      ' Add conditional formatting for vacation type K (Krankgeschrieben)
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J12=""K"""
+      ' Add conditional formatting for vacation type F (Freizeit)
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J12=""F"""
+      ' Add conditional formatting for vacation type U (Urlaub)
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J12=""U"""
+    End With
+    
+    ' Modify conditional formatting - do not modify the order, Excel has a lot of bugs
+    ' with conditional formatting and VBA
+    With table.DataBodyRange
+      With .FormatConditions(4)
+        .StopIfTrue = False
+        .Borders.Color = RGB(89, 89, 89)
+        .Font.Color = RGB(89, 89, 89)
+        .Font.Bold = True
+      End With
+      With .FormatConditions(5)
+        .StopIfTrue = False
+        .Borders.Color = RGB(131, 60, 12)
+        .Font.Color = RGB(131, 60, 12)
+        .Font.Bold = True
+      End With
+      With .FormatConditions(6)
+        .StopIfTrue = False
+        .Borders.Color = RGB(32, 55, 100)
+        .Font.Color = RGB(32, 55, 100)
+        .Font.Bold = True
+      End With
+      With .FormatConditions(7)
+        .StopIfTrue = False
+        .Borders.Color = RGB(55, 86, 35)
+        .Font.Color = RGB(55, 86, 35)
+        .Font.Bold = True
+      End With
+    End With
+    
+    With table.DataBodyRange
+      With .FormatConditions(4)
+        .Interior.Color = RGB(217, 217, 217)
+      End With
+      With .FormatConditions(5)
+        .Interior.Color = RGB(248, 203, 173)
+      End With
+      With .FormatConditions(6)
+        .Interior.Color = RGB(180, 198, 231)
+      End With
+      With .FormatConditions(7)
+        .Interior.Color = RGB(198, 224, 180)
+      End With
+    End With
+  End If
+End Sub
