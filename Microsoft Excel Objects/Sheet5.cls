@@ -61,7 +61,7 @@ Proceed:
   Dim workersCodesDB() As String
   Dim workersCodes() As String
   Dim workerAbsence() As String
-  Dim workerCol As Integer
+  Dim workerTableCol, workerCol As Integer
   
   ' Get the workers from database
   workersCodesDB = absenceList.AllMitarbeiter
@@ -92,6 +92,7 @@ Proceed:
   Next
   
   ' Populate the data with new content
+  Dim workersList As New MitarbeiterList
   For Each workerDB In workersCodesDB
     ' Get content for the worker
     workerAbsence = absenceList.Mitarbeiter(CStr(workerDB))
@@ -99,22 +100,40 @@ Proceed:
     ' Find the worker column
     For i = 0 To table.DataBodyRange.Columns.Count - 6
       If CStr(workerDB) = CStr(Cells(personalCodeRow, startWorkerColumn + 4 + i).Value) Then
-        workerCol = startWorkerColumn + i
+        workerTableCol = startWorkerColumn + i
+        workerCol = table.DataBodyRange(1, workerTableCol).Column
         Exit For
       End If
     Next i
     
-    ' Populate the respective rows
-    table.ListColumns(workerCol).DataBodyRange.ClearContents
+    ' Populate the respective columns
+    table.ListColumns(workerTableCol).DataBodyRange.ClearContents
     For j = 1 To table.DataBodyRange.Rows.Count
       If Len(workerAbsence(j - 1)) <> 0 Then
-        table.DataBodyRange(j, workerCol).Value = workerAbsence(j - 1)
+        table.DataBodyRange(j, workerTableCol).Value = workerAbsence(j - 1)
       Else
-        If Len(table.DataBodyRange(j, workerCol).Value) <> 0 Then
-          table.DataBodyRange(j, workerCol).ClearContents
+        If Len(table.DataBodyRange(j, workerTableCol).Value) <> 0 Then
+          table.DataBodyRange(j, workerTableCol).ClearContents
         End If
       End If
     Next j
+  
+    ' Check if all the information are up to date (only department and name)
+    workersList.Search CStr(workerDB)
+    With table.HeaderRowRange(1, workerTableCol)
+      If .Value <> workersList.worker.visName Then
+        .Value = CStr(workersList.worker.visName)
+      End If
+    End With
+    With Cells(4, workerCol)
+      If .Value <> workersList.worker.department Then
+        If Len(workersList.worker.department) > 5 Then
+          .Value = Left(workersList.worker.department, 5) & "."
+        Else
+          .Value = CStr(workersList.worker.department)
+        End If
+      End If
+    End With
   Next
   
   ' Reset change detected Cell
