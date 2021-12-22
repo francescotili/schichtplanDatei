@@ -122,6 +122,34 @@ Public Sub WeekRead(weekNumber As Double)
   Next i
 End Sub
 
+Public Sub DayRead(dayDate As Date)
+  Dim tempShiftCodes() As String
+  Set shiftCodes = CreateObject("System.Collections.ArrayList")
+  Dim shiftYear As Integer
+  Dim i, j As Double
+  Set weekData = New Collection
+  
+  ' Load shifts data from table
+  Me.Load
+  
+  ' Define the year, reading the first date of shifts database
+  shiftYear = year(dayDate)
+  
+  ' Generate shiftCodes to search and read
+  tempShiftCodes = generateShiftsCode(dayDate)
+  For i = LBound(tempShiftCodes) To UBound(tempShiftCodes)
+    shiftCodes.Add tempShiftCodes(i)
+  Next i
+  
+  ' Filter the data with the requested shifts and populate weekData collection
+  For i = 1 To data.Count
+    For j = 1 To shiftCodes.Count
+      If shiftCodes(j - 1) = data.Item(i).shiftCode Then
+        weekData.Add data.Item(i)
+      End If
+    Next j
+  Next i
+End Sub
 
 Public Sub GenerateYear(passedYear As Integer)
   Dim startDate, endDate As Date
