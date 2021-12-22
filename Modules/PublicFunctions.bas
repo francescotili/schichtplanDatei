@@ -64,3 +64,14 @@ Public Function IsInArray(stringToFind As String, dataArray As Variant) As Boole
   Next
   IsInArray = False
 End Function
+
+Public Function StringFormat(ByVal mask As String, ParamArray tokens()) As String
+  Dim i As Long
+  
+  For i = LBound(tokens) To UBound(tokens)
+    mask = Replace(mask, "{" & i & "}", tokens(i))
+  Next
+  
+  StringFormat = mask
+End Function
+
