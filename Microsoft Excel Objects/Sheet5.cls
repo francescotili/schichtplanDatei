@@ -124,7 +124,7 @@ Proceed:
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
-  sheet.Protect Password:=GAdminPassword, AllowFormattingColumns:=True
+  sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 
 Abort:
 End Sub
@@ -174,7 +174,7 @@ Proceed:
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
-  sheet.Protect Password:=GAdminPassword, AllowFormattingColumns:=True
+  sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
   absenceList.ProtectionON
   
 Abort:
