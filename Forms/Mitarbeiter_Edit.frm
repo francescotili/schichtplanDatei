@@ -23,7 +23,7 @@ Public Sub Initialize(workerPCode As String)
   textboxSurname.Value = workersList.worker.surname
   textboxPersonalCode.Value = workerPCode
   textboxDepartment.Value = workersList.worker.department
-  textboxVacationTotal.Value = workersList.worker.vacationTotal
+  'textboxVacationTotal.Value = workersList.worker.vacationTotal
   textboxVisNameOverride.Value = workersList.worker.visName
 End Sub
 
@@ -48,7 +48,7 @@ Private Sub Button_Save_Click()
     textboxSurname.Value, _
     textboxVisNameOverride.Value, _
     textboxDepartment.Value, _
-    textboxVacationTotal.Value
+    0 ' TODO: Use this field for "fremdarbeiter"
     
   ' Save or edit the worker
   workersList.Save worker
@@ -59,4 +59,3 @@ End Sub
 Private Sub Button_Cancel_Click()
   Unload Me
 End Sub
-

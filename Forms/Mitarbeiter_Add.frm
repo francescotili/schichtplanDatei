@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Private Sub textboxName_Change()
   ' When the name changes, it changes also the visualisation name
   textboxVisNameOverride.Value = Left(textboxName.Value, 1) & ". " & textboxSurname.Value
@@ -32,7 +31,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
   CheckValidity
-  textboxDepartment.Value = "OPT6"
+  textboxDepartment.Value = "Stanzerei"
 End Sub
 
 Private Sub Button_Save_Click()
@@ -46,7 +45,7 @@ Private Sub Button_Save_Click()
     textboxSurname.Value, _
     textboxVisNameOverride.Value, _
     textboxDepartment.Value, _
-    textboxVacationTotal.Value
+    0 ' TODO: use this field for "fremdarbeiter"
     
   ' Save or edit the worker
   workersList.Save worker
