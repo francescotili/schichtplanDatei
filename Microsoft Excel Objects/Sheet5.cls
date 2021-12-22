@@ -176,6 +176,11 @@ Proceed:
     For i = startWorkerColumn To table.DataBodyRange.Columns.Count
       If Cells(personalCodeRow, table.HeaderRowRange(1, i).Column) = CStr(workerDB) Then
         For j = 1 To table.DataBodyRange.Rows.Count
+          ' Convert "a" to "A"
+          If CStr(table.DataBodyRange(j, i)) = "a" Then
+            table.DataBodyRange(j, i) = "A"
+          End If
+          
           workerAbsence(j - 1) = table.DataBodyRange(j, i)
         Next j
         absenceList.Save CStr(workerDB), workerAbsence
