@@ -16,13 +16,13 @@ Attribute VB_Exposed = True
 Public sheet As Worksheet
 Private table As ListObject
 
-Private changesDetectedCell, detailsHiddenCell As Range
-Private moveColRBtn, moveColLBtn, toggleDetails As Shape
+Private changesDetectedCell As Range
+Private moveColRBtn, moveColLBtn As Shape
 
 ' Table styles
 Private Const workerColumnWidth As Double = 5
 Private Const startWorkerColumn As Integer = 6
-Private Const statisticsBeginRow As Integer = 3
+Private Const personalCodeRow As Integer = 3
 
 ' Strings
 Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
@@ -36,10 +36,8 @@ Public Sub Worksheet_Activate()
   
   Set moveColRBtn = Me.sheet.Shapes("Sh5_MoveColRightBtn")
   Set moveColLBtn = Me.sheet.Shapes("Sh5_MoveColLeftBtn")
-  Set toggleDetails = Me.sheet.Shapes("Sh5_ToggleDtailsVisBtn")
   
   Set changesDetectedCell = Range("Sh5_ChangesDetected")
-  Set detailsHiddenCell = Range("Sh5_DetailHidden")
   
   AbsenceDataLoad
 End Sub
@@ -74,7 +72,7 @@ Proceed:
   endCol = table.HeaderRowRange(1, table.DataBodyRange.Columns.Count).Column
   ReDim workersCodes(endCol - startCol)
   For i = startCol To endCol
-    workersCodes(i - startCol) = Cells(statisticsBeginRow + 6, i)
+    workersCodes(i - startCol) = Cells(personalCodeRow, i)
   Next i
   
   ' Check if all the workers in DB are in the table, if not then add it
@@ -100,7 +98,7 @@ Proceed:
     
     ' Find the worker column
     For i = 0 To table.DataBodyRange.Columns.Count - 6
-      If CStr(workerDB) = CStr(Cells(statisticsBeginRow + 6, startWorkerColumn + 4 + i).Value) Then
+      If CStr(workerDB) = CStr(Cells(personalCodeRow, startWorkerColumn + 4 + i).Value) Then
         workerCol = startWorkerColumn + i
         Exit For
       End If
@@ -157,7 +155,7 @@ Proceed:
   ' Scan every worker and save data
   For Each workerDB In workersCodesDB
     For i = startWorkerColumn To table.DataBodyRange.Columns.Count
-      If Cells(statisticsBeginRow + 6, table.HeaderRowRange(1, i).Column) = CStr(workerDB) Then
+      If Cells(personalCodeRow, table.HeaderRowRange(1, i).Column) = CStr(workerDB) Then
         For j = 1 To table.DataBodyRange.Rows.Count
           workerAbsence(j - 1) = table.DataBodyRange(j, i)
         Next j
@@ -207,57 +205,9 @@ Private Sub AddWorker(workerPCode As String)
     .Color = RGB(0, 154, 155)
     .Weight = xlThick
   End With
-  
-  ' Urlaubsanpruch Cell
-  With Cells(statisticsBeginRow, currentColumn)
-    .Value = workersList.worker.vacationTotal
-    .Font.Bold = True
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
-
-  ' Resturlaub Cell (FORMULA)
-  With Cells(statisticsBeginRow + 1, currentColumn)
-    .Formula = "=" & currentColumnAa & "3-SUM(" & currentColumnAa & "5," & currentColumnAa & "6," & currentColumnAa & "8)"
-    .Font.Bold = True
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
-
-  ' Nur Urlaub Cell (FORMULA)
-  With Cells(statisticsBeginRow + 2, currentColumn)
-    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=U"")"
-    .Font.Bold = False
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
-
-  ' Nur Freizeit Cell (FORMULA)
-  With Cells(statisticsBeginRow + 3, currentColumn)
-    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=F"")"
-    .Font.Bold = False
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
-
-  ' Nur Krank Cell (FORMULA)
-  With Cells(statisticsBeginRow + 4, currentColumn)
-    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=K"")"
-    .Font.Bold = False
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
-
-  ' Nur Sonstiges Cell (FORMULA)
-  With Cells(statisticsBeginRow + 5, currentColumn)
-    .Formula = "=COUNTIF(Urlaubsplan[" & workersList.worker.visName & "],""=S"")"
-    .Font.Bold = False
-    .HorizontalAlignment = xlHAlignCenter
-    .VerticalAlignment = xlVAlignCenter
-  End With
 
   ' Add personal code
-  With Cells(statisticsBeginRow + 6, currentColumn)
+  With Cells(personalCodeRow, currentColumn)
     .Value = workersList.worker.personalCode
     .Orientation = xlUpward
     .Font.Size = 10
@@ -267,7 +217,11 @@ Private Sub AddWorker(workerPCode As String)
 
   ' Add department
   With Cells(statisticsBeginRow + 7, currentColumn)
-    .Value = workersList.worker.department
+    If Len(workerList.worker.department) > 5 Then
+      .Value = Left(workerList.worker.department, 5) & "."
+    Else
+      .Value = workersList.worker.department
+    End If
     .Font.Size = 8
     .HorizontalAlignment = xlHAlignCenter
     .VerticalAlignment = xlVAlignCenter
@@ -278,12 +232,16 @@ Private Sub AddWorker(workerPCode As String)
 End Sub
 
 Private Sub DeleteWorker(workerPCode As String)
-  ' Get the workers from the table
   Dim startCol, endCol As Integer
   startCol = table.HeaderRowRange(1, startWorkerColumn).Column
   endCol = table.HeaderRowRange(1, table.DataBodyRange.Columns.Count).Column
+  
+  ' Protect buttons for moving columns
+  ProtectShapes
+  
+  ' Scan and delete worker
   For i = startCol To endCol
-    If CStr(Cells(statisticsBeginRow + 6, i).Value) = workerPCode Then
+    If CStr(Cells(personalCodeRow, i).Value) = workerPCode Then
       sheet.Columns(i).EntireColumn.Delete
     End If
   Next i
@@ -422,22 +380,6 @@ End Sub
 Private Sub ProtectShapes()
   sheet.Shapes("Sh5_MoveColRightBtn").Left = 0
   sheet.Shapes("Sh5_MoveColLeftBtn").Left = 0
-End Sub
-
-Public Sub ToggleDetailsVisibility()
-  If detailsHiddenCell.Value = True Then
-    sheet.Unprotect Password:=GAdminPassword
-    Rows("5:8").EntireRow.Hidden = True
-    toggleDetails.TextFrame.Characters.Text = "+"
-    detailsHiddenCell.Value = False
-    sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
-  Else
-    sheet.Unprotect Password:=GAdminPassword
-    Rows("5:8").EntireRow.Hidden = False
-    toggleDetails.TextFrame.Characters.Text = "–"
-    detailsHiddenCell.Value = True
-    sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
-  End If
 End Sub
 
 Private Sub ResetConditionalFormatting()
