@@ -131,7 +131,6 @@ Private Sub AbsenceDataLoad()
         workersNames(j) = workerList.worker.visName
       Next j
       
-      Debug.Print UBound(workersNames)
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
       Next j
@@ -453,7 +452,6 @@ End Sub
 Public Sub GoToPreviousDay()
   If changesDetectedCell.Value = True Then
     answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
-    Debug.Print answer
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
   Else
     GoTo Proceed
