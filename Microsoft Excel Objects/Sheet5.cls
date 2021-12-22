@@ -77,7 +77,7 @@ Proceed:
   
   ' Check if all the workers in DB are in the table, if not then add it
   For Each workerDB In workersCodesDB
-    If Not (UBound(Filter(workersCodes, workerDB)) > -1) Then
+    If Not IsInArray(CStr(workerDB), workersCodes) Then
       AddWorker CStr(workerDB)
       MsgBox newWorkerAddedText & vbCrLf & "Mitarbeiter-Nr. " & workerDB
     End If
@@ -85,7 +85,7 @@ Proceed:
   
   ' Check if all the workers in the table are in the DB, if not then delete it
   For Each worker In workersCodes
-    If Not (UBound(Filter(workersCodesDB, worker)) > -1) Then
+    If Not IsInArray(CStr(worker), workersCodesDB) Then
       MsgBox workerDeletedText & vbCrLf & "Mitarbeiter-Nr. " & worker
       DeleteWorker CStr(worker)
     End If
@@ -235,9 +235,9 @@ Private Sub AddWorker(workerPCode As String)
   End With
 
   ' Add department
-  With Cells(statisticsBeginRow + 7, currentColumn)
-    If Len(workerList.worker.department) > 5 Then
-      .Value = Left(workerList.worker.department, 5) & "."
+  With Cells(personalCodeRow + 1, currentColumn)
+    If Len(workersList.worker.department) > 5 Then
+      .Value = Left(workersList.worker.department, 5) & "."
     Else
       .Value = workersList.worker.department
     End If

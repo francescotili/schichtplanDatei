@@ -54,3 +54,13 @@ End Sub
 Public Sub notYetReady()
   MsgBox "Funktion noch nicht implementiert"
 End Sub
+
+Public Function IsInArray(stringToFind As String, dataArray As Variant) As Boolean
+  For Each dataItem In dataArray
+    If CStr(dataItem) = stringToFind Then
+      IsInArray = True
+      Exit Function
+    End If
+  Next
+  IsInArray = False
+End Function
