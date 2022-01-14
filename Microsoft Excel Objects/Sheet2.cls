@@ -17,11 +17,11 @@ Private weekData As Collection
 Private weekNumber As Double
 
 Private nextDayBtn, prevDayBtn As Shape
-Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWeekCell, changesDetectedCell As Range
+Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWeekCell, changesDetectedCell, lastUsedCell As Range
 
 Private Sub Sh2_WeekSaveBtn_Click()
   WeekDataSave
-  Range("G7").Select
+  Range(lastUsedCell.Value).Select
 End Sub
 
 Public Sub Worksheet_Activate()
@@ -36,6 +36,7 @@ Public Sub Worksheet_Activate()
   Set activeWeekCell = Range("Sh2_ActiveWeek")
   Set actualYearCell = Sheet3.Range("Global_ActualYear")
   Set changesDetectedCell = Range("Sh2_ChangesDetected")
+  Set lastUsedCell = Range("Sh2_LastCell")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
@@ -364,10 +365,10 @@ Private Sub EmptyPlan()
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
-  Sh2_WeekSaveBtn.Enabled = False
+  'Sh2_WeekSaveBtn.Enabled = False
   If Not Intersect(Target, Range("G7:J110")) Is Nothing Then ' Monitor changes on Schichtplan
     changesDetectedCell.Value = True
-    Sh2_WeekSaveBtn.Enabled = True
+    'Sh2_WeekSaveBtn.Enabled = True
   End If
 End Sub
 
@@ -385,13 +386,14 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     End With
         
     ' Move and visualize ComboBox if needed: only in worker range and if cell is empty
-    ' SOLVE IF SELECTED CELLS ARE MORE THAN ONE!!
     If Not Application.Intersect(Target, Range("G7:J110")) Is Nothing Then
       If Target.Areas.Count = 1 _
       And Target.Columns.Count = 1 _
       And Target.Rows.Count = 3 _
       And Target.Cells(1).Value = "" Then
+        lastUsedCell.Value = Target.Address
         sheet.Unprotect Password:=GAdminPassword
+        
         With ComboObj
           .Visible = True
           .Left = Target.Left + 1
@@ -413,8 +415,10 @@ End Sub
 Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
   Select Case KeyCode
     Case 9 ' Tab
+      changesDetectedCell.Value = True
       Application.ActiveCell.Offset(0, 1).Activate
     Case 13 ' Enter
+      changesDetectedCell.Value = True
       Application.ActiveCell.Offset(1, 0).Activate
     Case 27 ' ESC
       With sheet.OLEObjects("TempCombo")
