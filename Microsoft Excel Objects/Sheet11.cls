@@ -59,10 +59,8 @@ End Sub
 Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
   Select Case KeyCode
     Case 9 ' Tab
-      changesDetectedCell.Value = True
       Application.ActiveCell.Offset(0, 1).Activate
     Case 13 ' Enter
-      changesDetectedCell.Value = True
       Application.ActiveCell.Offset(1, 0).Activate
     Case 27 ' ESC
       With sheet.OLEObjects("TempCombo")
