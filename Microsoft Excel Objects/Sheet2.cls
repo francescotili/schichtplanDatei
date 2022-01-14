@@ -513,10 +513,16 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 End Sub
 
 Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
-    Select Case KeyCode
-        Case 9
-            Application.ActiveCell.Offset(0, 1).Activate
-        Case 13
-            Application.ActiveCell.Offset(1, 0).Activate
-    End Select
+  Select Case KeyCode
+    Case 9 ' Tab
+      Application.ActiveCell.Offset(0, 1).Activate
+    Case 13 ' Enter
+      Application.ActiveCell.Offset(1, 0).Activate
+    Case 27 ' ESC
+      With sheet.OLEObjects("TempCombo")
+        .Object.Value = ""
+        .Visible = False
+      End With
+      Application.ActiveCell.Activate
+  End Select
 End Sub
