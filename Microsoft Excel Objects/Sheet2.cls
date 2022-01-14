@@ -19,10 +19,6 @@ Private weekNumber As Double
 Private nextDayBtn, prevDayBtn As Shape
 Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWeekCell, changesDetectedCell As Range
 
-' Strings
-Private Const losignDataWarningText = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
-Private Const savingDataWarningText = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
-
 Private Sub Sh2_WeekSaveBtn_Click()
   WeekDataSave
   Range("G7").Select
@@ -46,7 +42,7 @@ End Sub
 
 Public Sub WeekDataLoad()
   If changesDetectedCell.Value = True Then
-    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
   Else
     GoTo Proceed
@@ -118,7 +114,7 @@ Private Sub AbsenceDataLoad()
         workerList.Search dayVacation(j)
         workersNames(j) = workerList.worker.visName
       Next j
-      workersNames(32) = "und " & moreVacation & " weitere"
+      workersNames(32) = StringFormat(str_sh2_moreAbsence, moreVacation)
 
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
@@ -161,7 +157,7 @@ Private Sub WeekDataSave()
     End With
   Case WeekStatus.Emtpy, WeekStatus.Normal
     Dim msgAnswer As Integer
-    msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
+    msgAnswer = MsgBox(str_sh2_savingWarn, vbQuestion + vbYesNo, "Fortfahren?")
     If msgAnswer = vbYes Then
       Sheet1.Unprotect Password:=GAdminPassword
       Save WeekDay.Unknown
@@ -390,7 +386,7 @@ End Sub
 
 Public Sub ToggleMode()
   If changesDetectedCell.Value = True Then
-    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
     If answer = vbYes Then GoTo ToggleMode Else GoTo NoToggle
   Else
     GoTo ToggleMode
@@ -436,7 +432,7 @@ End Sub
 
 Public Sub GoToNextDay()
   If changesDetectedCell.Value = True Then
-    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
   Else
     GoTo Proceed
@@ -451,7 +447,7 @@ End Sub
 
 Public Sub GoToPreviousDay()
   If changesDetectedCell.Value = True Then
-    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
   Else
     GoTo Proceed
@@ -478,4 +474,49 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     changesDetectedCell.Value = True
     Sh2_WeekSaveBtn.Enabled = True
   End If
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+  Dim ComboObj As OLEObject
+  Dim ComboListArr As Variant
+  
+  If Application.CutCopyMode = 0 Then
+    ' Initialize Combo Object for Autofill
+    Set ComboObj = sheet.OLEObjects("TempCombo")
+    With ComboObj
+      .Visible = False
+      .ListFillRange = "=Personal!" & Sheet9.ListObjects(GWorkerTableName).ListColumns(4).DataBodyRange.Address
+      .LinkedCell = ""
+    End With
+        
+    ' Move and visualize ComboBox if needed: only in worker range and if cell is empty
+    ' SOLVE IF SELECTED CELLS ARE MORE THAN ONE!!
+    If Not Application.Intersect(Target, Range("G7:J110")) Is Nothing Then
+      sheet.Unprotect Password:=GAdminPassword
+  
+      If Target.Cells(1).Value = "" Then
+        With ComboObj
+          .Visible = True
+          .Left = Target.Left + 1
+          .Top = Target.Top + 1
+          .Width = Target.Width - 1
+          .Height = Target.Height - 1
+          .LinkedCell = Target.Address
+        End With
+  
+        ComboObj.Activate
+        Me.TempCombo.DropDown
+      End If
+      sheet.Protect Password:=GAdminPassword
+    End If
+  End If
+End Sub
+
+Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+    Select Case KeyCode
+        Case 9
+            Application.ActiveCell.Offset(0, 1).Activate
+        Case 13
+            Application.ActiveCell.Offset(1, 0).Activate
+    End Select
 End Sub
