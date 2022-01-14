@@ -492,9 +492,11 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     ' Move and visualize ComboBox if needed: only in worker range and if cell is empty
     ' SOLVE IF SELECTED CELLS ARE MORE THAN ONE!!
     If Not Application.Intersect(Target, Range("G7:J110")) Is Nothing Then
-      sheet.Unprotect Password:=GAdminPassword
-  
-      If Target.Cells(1).Value = "" Then
+      If Target.Areas.Count = 1 _
+      And Target.Columns.Count = 1 _
+      And Target.Rows.Count = 3 _
+      And Target.Cells(1).Value = "" Then
+        sheet.Unprotect Password:=GAdminPassword
         With ComboObj
           .Visible = True
           .Left = Target.Left + 1
@@ -506,8 +508,9 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   
         ComboObj.Activate
         Me.TempCombo.DropDown
+        
+        sheet.Protect Password:=GAdminPassword
       End If
-      sheet.Protect Password:=GAdminPassword
     End If
   End If
 End Sub
