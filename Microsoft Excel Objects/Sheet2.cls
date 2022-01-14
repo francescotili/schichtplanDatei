@@ -179,52 +179,9 @@ Public Sub Save(passedDay As WeekDay)
   
   ' Read data for every shift and save them in a collection of workPlaces
   For j = 1 To 4
-    ' Stanzerei
     startRow = 7
-    startWorkPlace = 1
-    endWorkPlace = 11
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
-    Next i
-    
-    ' Qualitaet
-    startRow = 41
-    startWorkPlace = 12
-    endWorkPlace = 13
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
-    Next i
-    
-    ' Lager+Trommlerei
-    startRow = 48
-    startWorkPlace = 14
-    endWorkPlace = 15
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
-    Next i
-    
-    ' Buero
-    startRow = 55
-    startWorkPlace = 16
-    endWorkPlace = 20
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
-    Next i
-    
-    ' Galvanik
-    startRow = 71
-    startWorkPlace = 21
-    endWorkPlace = 26
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
-    Next i
-    
-    ' Instandsetzung
-    startRow = 90
-    startWorkPlace = 27
-    endWorkPlace = 33
-    For i = 1 To (endWorkPlace - startWorkPlace + 1)
-      workPlaces(j - 1, startWorkPlace + i - 2) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
+    For i = 1 To 33
+      workPlaces(j - 1, i - 1) = CStr(sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))).Value)
     Next i
   Next j
   
@@ -305,73 +262,11 @@ Private Sub Populate(passedDay As WeekDay)
   shiftStartCol = 7 ' Columnn G
   
   ' Stanzerei
-  stanzStartRow = 7
-  startWorkPlace = 1
-  endWorkPlace = 11
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
+  startRow = 7
+  For i = 1 To 33
     For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((stanzStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
-      End If
-    Next j
-  Next i
-  
-  ' Qualitaet
-  qualiStartRow = 41
-  startWorkPlace = 12
-  endWorkPlace = 13
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
-    For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((qualiStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
-      End If
-    Next j
-  Next i
-  
-  ' Lager+Trommlerei
-  lagerStartRow = 48
-  startWorkPlace = 14
-  endWorkPlace = 15
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
-    For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((lagerStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
-      End If
-    Next j
-  Next i
-  
-  ' Buero
-  bueroStartRow = 55
-  startWorkPlace = 16
-  endWorkPlace = 20
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
-    For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((bueroStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i + startWorkPlace - 2))
-      End If
-    Next j
-  Next i
-  
-  ' Galvanik
-  galvaStartRow = 71
-  startWorkPlace = 21
-  endWorkPlace = 26
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
-    For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((galvaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
-      End If
-    Next j
-  Next i
-  
-  ' Instandsetzung
-  instaStartRow = 90
-  startWorkPlace = 27
-  endWorkPlace = 33
-  For i = 1 To (endWorkPlace - startWorkPlace + 1)
-    For j = 1 To 4
-      If Len(CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))) <> 0 Then
-        sheet.Cells((instaStartRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1)).workPlace(i + startWorkPlace - 2))
+      If Len(CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i - 1))) <> 0 Then
+        sheet.Cells((startRow + 3 * (i - 1)), (shiftStartCol + (j - 1))) = CStr(weekData.Item(j + (passedDay - 1) * 4).workPlace(i - 1))
       End If
     Next j
   Next i
