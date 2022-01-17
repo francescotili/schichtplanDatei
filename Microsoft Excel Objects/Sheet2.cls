@@ -106,16 +106,16 @@ Private Sub AbsenceDataLoad()
     dayVacation = absenceList.DayAbsences(DateSerial(year(weekDate), Month(weekDate), day(weekDate)))
     
     Select Case UBound(dayVacation)
-    Case Is > 32
-      moreVacation = UBound(dayVacation) - 31
-      ReDim Preserve dayVacation(31)
-      ReDim workersNames(32)
+    Case Is > 98
+      moreVacation = UBound(dayVacation) - 97
+      ReDim Preserve dayVacation(97)
+      ReDim workersNames(98)
 
       For j = 0 To UBound(dayVacation)
         workerList.Search dayVacation(j)
         workersNames(j) = workerList.worker.visName
       Next j
-      workersNames(32) = StringFormat(str_sh2_moreAbsence, moreVacation)
+      workersNames(98) = StringFormat(str_sh2_moreAbsence, moreVacation)
 
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
