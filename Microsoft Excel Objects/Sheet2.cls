@@ -439,6 +439,10 @@ Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shif
   End Select
 End Sub
 
+Private Sub TempCombo_Click()
+  changesDetectedCell.Value = True
+End Sub
+
 Public Sub MasterWeekImport()
   Dim startCol, startRow As Integer
   
@@ -465,3 +469,4 @@ Public Sub MasterWeekImport()
   
   Application.ScreenUpdating = True
 End Sub
+
