@@ -34,10 +34,16 @@ Public Sub DayDataLoad()
   sheet.Unprotect Password:=GAdminPassword
   
   ' Get the day data
+  activeDayCell = dayToLoadCell.Value
   ShiftDataLoad
+  Populate
   
-  ' POPOLARE LA TABELLA QUI <----------
+  ' Get the absence data
+  'AbsenceDataLoad
 
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  'sheet.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub ShiftDataLoad()
@@ -45,5 +51,51 @@ Private Sub ShiftDataLoad()
   
   ' Get the day data
   shiftList.DayRead dayToLoadCell.Value
-  Set weekData = shiftList.weekData
+  Set weekData = shiftList.weekData 'Contains only 4 shiftCodes
+End Sub
+
+Private Sub AbsenceDataLoad()
+  
+End Sub
+
+Private Sub Populate()
+  ' This function populate the various sections of the Worksheet.
+  ' Warning: before calling this function, please load and pass the right data!
+  
+  Dim startRow, startCol As Integer
+  Dim numOfWorkplaces As Integer
+  Dim i, j As Long
+  
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  EmptyPlan
+  
+  ' Set variable for the view
+  startCol = 9 ' Column I
+  startRow = 6
+  numOfWorkplaces = Sheet1.ListObjects(GShiftsTableName).DataBodyRange.Columns.Count - 3
+  For i = 1 To numOfWorkplaces
+    For j = 1 To 4
+      If Len(CStr(weekData.Item(j).workPlace(i - 1))) <> 0 Then
+        sheet.Cells((startRow + 2 * (i - 1)), (startCol + (j - 1))) = CStr(weekData.Item(j).workPlace(i - 1))
+      End If
+    Next j
+  Next i
+End Sub
+
+Private Sub EmptyPlan()
+  Dim startCell, endCell As String
+  
+  startCell = "I6"
+  endCell = "L71"
+  Range(startCell & ":" & endCell).ClearContents
+End Sub
+
+Private Sub EmptyAbsences()
+  Dim startCell, endCell As String
+  
+  startCell = "N6"
+  endCell = "P71"
+  Range(startCell & ":" & endCell).ClearContents
 End Sub
