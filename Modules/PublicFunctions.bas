@@ -75,3 +75,7 @@ Public Function StringFormat(ByVal mask As String, ParamArray tokens()) As Strin
   StringFormat = mask
 End Function
 
+Public Function importMasterWeek()
+  Sheet2.MasterWeekImport
+End Function
+

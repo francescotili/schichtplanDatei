@@ -258,6 +258,7 @@ Private Sub Populate(passedDay As WeekDay)
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   EmptyPlan
+  EmptyAbsences
   
   ' Set variable for the view
   shiftStartCol = 7 ' Columnn G
@@ -323,6 +324,7 @@ Private Sub SetEmptyMode()
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
   EmptyPlan
+  EmptyAbsences
   changesDetectedCell.Value = False
 End Sub
 
@@ -357,11 +359,19 @@ Abort:
 End Sub
 
 Private Sub EmptyPlan()
-  Dim shiftStartCell, shiftEndCell As String
+  Dim startCell, endCell As String
   
-  shiftStartCell = "G7"
-  shiftEndCell = "P110"
-  Range(shiftStartCell & ":" & shiftEndCell).ClearContents
+  startCell = "G7"
+  endCell = "J105"
+  Range(startCell & ":" & endCell).ClearContents
+End Sub
+
+Private Sub EmptyAbsences()
+  Dim startCell, endCell As String
+  
+  startCell = "L7"
+  endCell = "P105"
+  Range(startCell & ":" & endCell).ClearContents
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -427,4 +437,31 @@ Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shif
       End With
       Application.ActiveCell.Activate
   End Select
+End Sub
+
+Public Sub MasterWeekImport()
+  Dim startCol, startRow As Integer
+  
+  startRowMW = 7
+  startRow = 7
+  startCol = 7
+  
+  Application.ScreenUpdating = False
+  EmptyPlan
+  
+  If activeWeekCell.Value Mod 2 = 0 Then
+    ' Even (gerade)
+    startColMW = 7
+  Else
+    ' Odd (ungerade)
+    startColMW = 14
+  End If
+    
+  For j = 1 To 4
+    For i = 1 To 33
+      sheet.Cells(startRow + 3 * (i - 1), startCol + j - 1).Value = CStr(Sheet11.Cells(startRowMW + 3 * (i - 1), startColMW + j - 1).Value)
+    Next i
+  Next j
+  
+  Application.ScreenUpdating = True
 End Sub
