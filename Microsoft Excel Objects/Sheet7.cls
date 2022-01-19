@@ -86,16 +86,16 @@ Private Sub AbsenceDataLoad()
     dayVacation = absenceList.DayAbsences(DateSerial(year(weekDate), Month(weekDate), day(weekDate)))
     
     Select Case UBound(dayVacation)
-    Case Is > 32
-      moreVacation = UBound(dayVacation) - 31
-      ReDim Preserve dayVacation(31)
-      ReDim workersNames(32)
+    Case Is > 65
+      moreVacation = UBound(dayVacation) - 64
+      ReDim Preserve dayVacation(64)
+      ReDim workersNames(65)
 
       For j = 0 To UBound(dayVacation)
         workerList.Search dayVacation(j)
         workersNames(j) = workerList.worker.visName
       Next j
-      workersNames(32) = "und " & moreVacation & " weitere"
+      workersNames(64) = "und " & moreVacation & " weitere"
 
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
@@ -147,6 +147,7 @@ Private Sub Populate(passedDay As WeekDay)
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   EmptyPlan
+  EmptyAbsences
   
   ' Set variable for the view
   startCol = 9 ' Columnn I
@@ -166,11 +167,19 @@ Private Sub Populate(passedDay As WeekDay)
 End Sub
 
 Private Sub EmptyPlan()
-  Dim shiftStartCell, shiftEndCell As String
+  Dim startCell, endCell As String
   
-  shiftStartCell = "I6"
-  shiftEndCell = "R71"
-  Range(shiftStartCell & ":" & shiftEndCell).ClearContents
+  startCell = "I6"
+  endCell = "L71"
+  Range(startCell & ":" & endCell).ClearContents
+End Sub
+
+Private Sub EmptyAbsences()
+  Dim startCell, endCell As String
+  
+  startCell = "N6"
+  endCell = "R71"
+  Range(startCell & ":" & endCell).ClearContents
 End Sub
 
 Private Sub SetNormalMode()
@@ -183,10 +192,12 @@ Private Sub SetCustomMode()
   weekStatusCell.Value = WeekStatus.Custom
   weekStatusLabel.Value = "Unregelmäßige Woche"
   EmptyPlan
+  EmptyAbsences
 End Sub
 
 Private Sub SetEmptyMode()
   weekStatusCell.Value = WeekStatus.Emtpy
   weekStatusLabel.Value = "Leere Woche"
   EmptyPlan
+  EmptyAbsences
 End Sub
