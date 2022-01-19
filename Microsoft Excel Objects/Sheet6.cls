@@ -39,7 +39,7 @@ Public Sub DayDataLoad()
   Populate
   
   ' Get the absence data
-  'AbsenceDataLoad
+  AbsenceDataLoad
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -55,7 +55,71 @@ Private Sub ShiftDataLoad()
 End Sub
 
 Private Sub AbsenceDataLoad()
+  Dim absenceList As New AbwesenheitsList
+  Dim workerList As New MitarbeiterList
+  Dim weekDates(2) As Date
+  Dim dayVacation() As String
+  Dim workersNames() As String
+  Dim startCol, startRow As Integer
+  Dim i, j As Long
   
+  ' Disable screen Updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+  
+  ' Set coordinates
+  startCol = 14
+  startRow = 6
+  
+  ' Get the days
+  For i = 1 To 3
+    weekDates(i - 1) = dayToLoadCell.Value + i - 1
+  Next i
+  
+  ' Get data and populate
+  i = 0
+  For Each weekDate In weekDates
+    dayVacation = absenceList.DayAbsences(DateSerial(year(weekDate), Month(weekDate), day(weekDate)))
+    
+    Select Case UBound(dayVacation)
+    Case Is > 65
+      moreVacation = UBound(dayVacation) - 64
+      ReDim Preserve dayVacation(64)
+      ReDim workersNames(65)
+      
+      For j = 0 To UBound(dayVacation)
+        workerList.Search dayVacation(j)
+        workersNames(j) = workerList.worker.visName
+      Next j
+      workersNames(64) = "und " & moreVacation & " weitere"
+      
+      For j = 0 To UBound(workersNames)
+        sheet.Cells(startRow + j, startCol + i) = workersNames(j)
+      Next j
+    Case Is > 0
+      ReDim workersNames(UBound(dayVacation))
+      
+      For j = 0 To UBound(dayVacation)
+        workerList.Search dayVacation(j)
+        workersNames(j) = workerList.worker.visName
+      Next j
+      
+      For j = 0 To UBound(workersNames)
+        sheet.Cells(startRow + j, startCol + i) = workersNames(j)
+      Next j
+    Case Is = 0
+      If dayVacation(0) <> "0" Then
+        workerList.Search dayVacation(0)
+        sheet.Cells(startRow, startCol + i) = workerList.worker.visName
+      End If
+    End Select
+    
+    i = i + 1
+  Next
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  'sheet.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub Populate()
@@ -70,6 +134,7 @@ Private Sub Populate()
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
   EmptyPlan
+  EmptyAbsences
   
   ' Set variable for the view
   startCol = 9 ' Column I
