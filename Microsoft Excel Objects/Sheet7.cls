@@ -95,7 +95,7 @@ Private Sub AbsenceDataLoad()
         workerList.Search dayVacation(j)
         workersNames(j) = workerList.worker.visName
       Next j
-      workersNames(64) = "und " & moreVacation & " weitere"
+      workersNames(64) = StringFormat(str_sh7_moreAbsence, moreVacation)
 
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
@@ -184,20 +184,20 @@ End Sub
 
 Private Sub SetNormalMode()
   weekStatusCell.Value = WeekStatus.Normal
-  weekStatusLabel.Value = "Regelmäßige Woche"
+  weekStatusLabel.Value = str_sh7_weekStatusLabelNM
   Populate Monday
 End Sub
 
 Private Sub SetCustomMode()
   weekStatusCell.Value = WeekStatus.Custom
-  weekStatusLabel.Value = "Unregelmäßige Woche"
+  weekStatusLabel.Value = str_sh7_weekStatusLabelCM
   EmptyPlan
   EmptyAbsences
 End Sub
 
 Private Sub SetEmptyMode()
   weekStatusCell.Value = WeekStatus.Emtpy
-  weekStatusLabel.Value = "Leere Woche"
+  weekStatusLabel.Value = str_sh7_weekStatusLabelEM
   EmptyPlan
   EmptyAbsences
 End Sub

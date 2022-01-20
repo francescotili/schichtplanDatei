@@ -9,5 +9,5 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Worksheet_Change(ByVal Target As Range)
   ' Monitor changes in Feiertage registerkarte
-  saveHistory ("Im Registerkarte ""Feiertage"" wurden Änderungen festgestellt")
+  saveHistory (str_sh10_history)
 End Sub

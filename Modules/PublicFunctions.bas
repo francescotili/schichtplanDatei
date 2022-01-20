@@ -32,7 +32,7 @@ Public Sub ResetDatabase()
   End With
 End Sub
 
-Public Function saveHistory(Optional eventName As String = "Unspecified event detected")
+Public Function saveHistory(Optional eventName As String = str_unspecifiedHistory)
   ' Define a new History Entry
   Set newHistoryEntry = New history
   
@@ -52,7 +52,7 @@ Public Sub test()
 End Sub
 
 Public Sub notYetReady()
-  MsgBox "Funktion noch nicht implementiert"
+  MsgBox str_notYetReady
 End Sub
 
 Public Function IsInArray(stringToFind As String, dataArray As Variant) As Boolean

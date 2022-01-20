@@ -94,7 +94,7 @@ Private Sub AbsenceDataLoad()
         workerList.Search dayVacation(j)
         workersNames(j) = workerList.worker.visName
       Next j
-      workersNames(64) = "und " & moreVacation & " weitere"
+      workersNames(64) = StringFormat(str_sh6_moreAbsence, moreVacation)
       
       For j = 0 To UBound(workersNames)
         sheet.Cells(startRow + j, startCol + i) = workersNames(j)
@@ -187,5 +187,4 @@ Private Function IsWorkerAbsent(passedName As String) As Boolean
   ' Return result
   IsWorkerAbsent = result
 End Function
-
 

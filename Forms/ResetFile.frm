@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ResetFile 
-   Caption         =   "Datei zurücksetzen"
+   Caption         =   "Datei zurï¿½cksetzen"
    ClientHeight    =   2700
    ClientLeft      =   120
    ClientTop       =   465
@@ -24,24 +24,24 @@ End Sub
 Private Sub Proceed_Click()
   ' Generate new year on shifts list
 '  If Shifts_Check = True Then
-    Application.StatusBar = "Schichtplandatei wurde zurückgesetzt. Bitte warten!"
+    Application.StatusBar = str_fRF_shiftPlanReset
     Dim shiftList As New SchichtList
     shiftList.GenerateYear JahrTextbox.Value ' Sanitized in JahrTextbox_Change()
 '  End If
   
   ' Generate new year on vacation list
 '  If Vacation_Check = True Then
-    Application.StatusBar = "Abwesenheitsplan wurde zurückgesetzt. Bitte warten!"
+    Application.StatusBar = str_fRF_absencePlanReset
     Dim vacationList As New AbwesenheitsList
     vacationList.GenerateYear JahrTextbox.Value ' Sanitized in JahrTextbox_Change()
-    Application.StatusBar = "Abwesenheitstabelle wurde zurückgesetzt. Bitte warten!"
+    Application.StatusBar = str_fRF_absenceTableReset
     Sheet5.TableInitialize JahrTextbox.Value
 '  End If
   
   ' Delete workers database and update also vacation list
   ' To be reimplemented, because it doesn't work well with Sheet5.TableInitialize
 '  If Workers_Check = True Then
-'    Application.StatusBar = "Personallist wurde zurückgesetzt. Bitte warten!"
+'    Application.StatusBar = "Personallist wurde zurueckgesetzt. Bitte warten!"
 '    Dim workersList As New MitarbeiterList
 '    workersList.Reset
 '  End If

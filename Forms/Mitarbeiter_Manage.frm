@@ -35,18 +35,18 @@ Private Sub Btn_MitarbeiterDelete_Click()
   selectedPCode = GetSelectedWorker
   
   If selectedPCode = "" Then ' No worker selected
-    MsgBox "Bitte einen Mitarbeiter aus der Liste auswählen!"
+    MsgBox str_fMM_noWorkerSelected
   Else
     ' Ask for confirmation
     Dim Msg, Style, Title
-    Msg = "ACHTUNG!" & vbCrLf & "Mitarbeiter-Nr. " & selectedPCode & " wird endgultig gelöscht." & vbCrLf & "Wirklich fortfahren ??"
+    Msg = StringFormat(str_fMM_deleteConfirmation, selectedPCode)
     Style = vbYesNo + vbExclamation + vbDefaultButton2
     response = MsgBox(Msg, Style, Title)
     If response = vbYes Then ' User wants to continue
       Dim workersData As New MitarbeiterList
       workersData.Delete (selectedPCode)
       UpdateData
-      saveHistory ("Mitarbeiter-Nr. " & selectedPCode & " gelöscht")
+      saveHistory StringFormat(str_fMM_historyDeletion, selectedPCode)
     End If
   End If
 End Sub
@@ -57,7 +57,7 @@ Private Sub Btn_MitarbeiterEdit_Click()
   selectedPCode = GetSelectedWorker
   
   If selectedPCode = "" Then ' No worker selected
-    MsgBox "Bitte einen Mitarbeiter aus der Liste auswählen!"
+    MsgBox str_fMM_noWorkerSelected
   Else
     ' Close window
     Unload Me

@@ -24,12 +24,6 @@ Private Const workerColumnWidth As Double = 5
 Private Const startWorkerColumn As Integer = 6
 Private Const personalCodeRow As Integer = 3
 
-' Strings
-Private Const losignDataWarningText = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
-Private Const newWorkerAddedText = "Ein neuer Mitarbeiter wurde dem Plan hinzugefugt"
-Private Const workerDeletedText = "Ein Mitarbeiter wurde aus dem Plan gelöscht"
-Private Const savingDataWarningText = "Möchten Sie den Abwesenheitplan wirklich speichern?" & vbCrLf & "Vorhandene Daten werden überschrieben!"
-
 Public Sub Worksheet_Activate()
   Set sheet = Sheet5
   Set table = sheet.ListObjects.Item(GAbsencesModifyTableName)
@@ -46,7 +40,7 @@ Private Sub AbsenceDataLoad()
   Dim i, j As Long
   
   If changesDetectedCell.Value = True Then
-    answer = MsgBox(losignDataWarningText, vbExclamation + vbYesNo, "ACHTUNG")
+    answer = MsgBox(str_sh5_losingDataWarn, vbExclamation + vbYesNo, "ACHTUNG")
     If answer = vbYes Then GoTo Proceed Else GoTo Abort
   Else
     GoTo Proceed
@@ -79,14 +73,14 @@ Proceed:
   For Each workerDB In workersCodesDB
     If Not IsInArray(CStr(workerDB), workersCodes) Then
       AddWorker CStr(workerDB)
-      MsgBox newWorkerAddedText & vbCrLf & "Mitarbeiter-Nr. " & workerDB
+      MsgBox str_sh5_newWorkerAdded & vbCrLf & "Mitarbeiter-Nr. " & workerDB
     End If
   Next
   
   ' Check if all the workers in the table are in the DB, if not then delete it
   For Each worker In workersCodes
     If Not IsInArray(CStr(worker), workersCodesDB) Then
-      MsgBox workerDeletedText & vbCrLf & "Mitarbeiter-Nr. " & worker
+      MsgBox str_sh5_workerDeleted & vbCrLf & "Mitarbeiter-Nr. " & worker
       DeleteWorker CStr(worker)
     End If
   Next
@@ -152,7 +146,7 @@ End Sub
 
 Private Sub AbsenceDataSave()
   Dim msgAnswer As Integer
-  msgAnswer = MsgBox(savingDataWarningText, vbQuestion + vbYesNo, "Fortfahren?")
+  msgAnswer = MsgBox(str_sh5_savingWarn, vbQuestion + vbYesNo, "Fortfahren?")
   If msgAnswer = vbYes Then GoTo Proceed Else GoTo Abort
 
 Proceed:
@@ -192,7 +186,7 @@ Proceed:
   changesDetectedCell.Value = False
   
   ' Log event in History
-  saveHistory ("Der Abwesenheitsplan wurde geändert")
+  saveHistory (str_sh2_history)
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
