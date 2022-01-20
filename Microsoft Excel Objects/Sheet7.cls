@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 ' --------------------------------------------
 ' WEEK VIEW FUNCTIONS
 ' Manage methods for getting all the data for
-' Sheet7 (ÜB Woche)
+' Sheet7 (UB Woche)
 ' --------------------------------------------
 Public sheet As Worksheet
 Private weekData As Collection
