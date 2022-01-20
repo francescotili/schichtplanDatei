@@ -32,14 +32,18 @@ Public Sub DayDataLoad()
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
+  activeDayCell = dayToLoadCell.Value
+  
+  EmptyPlan
+  EmptyAbsences
   
   ' Get the day data
-  activeDayCell = dayToLoadCell.Value
   ShiftDataLoad
-  Populate
   
   ' Get the absence data
   AbsenceDataLoad
+  
+  Populate
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
@@ -133,8 +137,6 @@ Private Sub Populate()
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
-  EmptyPlan
-  EmptyAbsences
   
   ' Set variable for the view
   startCol = 9 ' Column I
@@ -143,7 +145,9 @@ Private Sub Populate()
   For i = 1 To numOfWorkplaces
     For j = 1 To 4
       If Len(CStr(weekData.Item(j).workPlace(i - 1))) <> 0 Then
-        sheet.Cells((startRow + 2 * (i - 1)), (startCol + (j - 1))) = CStr(weekData.Item(j).workPlace(i - 1))
+        If Not IsWorkerAbsent(CStr(weekData.Item(j).workPlace(i - 1))) Then
+          sheet.Cells((startRow + 2 * (i - 1)), (startCol + (j - 1))) = CStr(weekData.Item(j).workPlace(i - 1))
+        End If
       End If
     Next j
   Next i
@@ -164,3 +168,25 @@ Private Sub EmptyAbsences()
   endCell = "P71"
   Range(startCell & ":" & endCell).ClearContents
 End Sub
+
+Private Function IsWorkerAbsent(passedName As String) As Boolean
+  Dim absentWorkers() As Variant
+  Dim result As Boolean
+  result = False
+  
+  ' Get all the absences
+  absentWorkers = Range("N6:N71")
+  
+  ' Check if passedName is found
+  For i = 1 To UBound(absentWorkers)
+    If absentWorkers(i, 1) = passedName Then
+      result = True
+      Exit For
+    End If
+  Next i
+  
+  ' Return result
+  IsWorkerAbsent = result
+End Function
+
+
