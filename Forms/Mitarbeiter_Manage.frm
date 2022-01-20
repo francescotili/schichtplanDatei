@@ -74,16 +74,16 @@ Private Sub Btn_MitarbeiterEdit_Click()
 End Sub
 
 Private Function GetSelectedWorker() As String
-  Dim x As Long
+  Dim X As Long
   Dim selectedPCode As String
   selectedPCode = ""
   
   ' Get selected element
-  For x = 0 To MitarbeiterList.ListCount - 1
-    If MitarbeiterList.Selected(x) = True Then
-      selectedPCode = MitarbeiterList.list(x, 0)
+  For X = 0 To MitarbeiterList.ListCount - 1
+    If MitarbeiterList.Selected(X) = True Then
+      selectedPCode = MitarbeiterList.list(X, 0)
     End If
-  Next x
+  Next X
   
   GetSelectedWorker = selectedPCode
 End Function
@@ -94,7 +94,7 @@ End Sub
 
 Public Sub UpdateData()
   Dim User As Mitarbeiter
-  Dim x, i As Long
+  Dim X, i As Long
   Dim entryList() As String
   
   Set userList = New MitarbeiterList
