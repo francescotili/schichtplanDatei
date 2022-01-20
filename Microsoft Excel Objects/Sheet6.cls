@@ -10,7 +10,7 @@ Attribute VB_Exposed = True
 ' --------------------------------------------
 ' DAY VIEW FUNCTIONS
 ' Manage methods for getting all the data for
-' Sheet6 (ÜB Tag)
+' Sheet6 (UB Tag)
 ' --------------------------------------------
 Public sheet As Worksheet
 Private weekData As Collection
@@ -23,7 +23,6 @@ Public Sub Worksheet_Activate()
   Set dayToLoadCell = Range("Sh6_DayToLoadCell")
   Set activeWeekCell = Range("Sh6_ActiveWeek")
   Set activeDayCell = Range("Sh6_ActiveDay")
-  'Set actualYearCell = Sheet3.Range("Global_ActualYear")
   
   DayDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
@@ -47,7 +46,7 @@ Public Sub DayDataLoad()
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
-  'sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub ShiftDataLoad()
@@ -123,7 +122,7 @@ Private Sub AbsenceDataLoad()
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
-  'sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub Populate()
