@@ -23,6 +23,7 @@ Public Const str_sh2_history = "Der Abwesenheitsplan wurde geändert"
 Public Const str_sh6_moreAbsence = "Und {0} weitere"
 Public Const str_sh6_errNextYear = "Achtung!" & vbCrLf & "Sie können nicht ins nächste Jahr gehen"
 Public Const str_sh6_errPrevYear = "Achtung!" & vbCrLf & "Sie können nicht zum Vorjahr wechseln"
+Public Const str_sh6_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes Jahr als das in der Datei"
 
 ' Sheet 7
 Public Const str_sh7_weekStatusLabelNM = "Regelmäßige Woche"
