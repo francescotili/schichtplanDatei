@@ -201,3 +201,31 @@ Private Sub SetEmptyMode()
   EmptyPlan
   EmptyAbsences
 End Sub
+
+Public Sub NextWeekLoad()
+  If (weekToLoadCell.Value + 1) <= maxKW Then
+    weekToLoadCell.Value = weekToLoadCell.Value + 1
+    WeekDataLoad
+  Else
+    MsgBox str_sh7_errNextYear
+  End If
+End Sub
+
+Public Sub PreviousWeekLoad()
+  If (weekToLoadCell.Value - 1) <> 0 Then
+    weekToLoadCell.Value = weekToLoadCell.Value - 1
+    WeekDataLoad
+  Else
+    MsgBox str_sh7_errPrevYear
+  End If
+End Sub
+
+Public Sub GoToActualWeek()
+  Debug.Print WorksheetFunction.WeekNum(Now, 21)
+  If actualYearCell = year(Date) Then
+    weekToLoadCell.Value = WorksheetFunction.WeekNum(Now, 21)
+    WeekDataLoad
+  Else
+    MsgBox str_sh7_errTodayYear
+  End If
+End Sub

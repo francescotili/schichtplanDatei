@@ -30,6 +30,9 @@ Public Const str_sh7_weekStatusLabelNM = "Regelmäßige Woche"
 Public Const str_sh7_weekStatusLabelCM = "Unregelmäßige Woche"
 Public Const str_sh7_weekStatusLabelEM = "Leere Woche"
 Public Const str_sh7_moreAbsence = "Und {0} weitere"
+Public Const str_sh7_errNextYear = "Achtung!" & vbCrLf & "Sie können nicht ins nächste Jahr gehen"
+Public Const str_sh7_errPrevYear = "Achtung!" & vbCrLf & "Sie können nicht zum Vorjahr wechseln"
+Public Const str_sh7_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes Jahr als das in der Datei"
 
 ' Sheet 10
 Public Const str_sh10_history = "Im Registerkarte ""Feiertage"" wurden änderungen festgestellt"
