@@ -221,11 +221,15 @@ Public Sub PreviousWeekLoad()
 End Sub
 
 Public Sub GoToActualWeek()
-  Debug.Print WorksheetFunction.WeekNum(Now, 21)
   If actualYearCell = year(Date) Then
     weekToLoadCell.Value = WorksheetFunction.WeekNum(Now, 21)
     WeekDataLoad
   Else
     MsgBox str_sh7_errTodayYear
   End If
+End Sub
+
+Public Sub ModifyWeek()
+  Sheet2.Range("Sh2_WeekToLoadCell").Value = activeWeekCell.Value
+  Sheet2.Activate
 End Sub
