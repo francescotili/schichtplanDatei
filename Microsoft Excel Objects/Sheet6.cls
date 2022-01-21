@@ -188,3 +188,30 @@ Private Function IsWorkerAbsent(passedName As String) As Boolean
   IsWorkerAbsent = result
 End Function
 
+Public Sub NextDayLoad()
+  Dim actualYear, newYear As Integer
+  
+  actualYear = year(dayToLoadCell.Value)
+  newYear = year(dayToLoadCell.Value + 1)
+  
+  If actualYear = newYear Then
+    dayToLoadCell.Value = dayToLoadCell.Value + 1
+    DayDataLoad
+  Else
+    MsgBox str_sh6_errNextYear
+  End If
+End Sub
+
+Public Sub PreviousDayLoad()
+  Dim actualYear, newYear As Integer
+  
+  actualYear = year(dayToLoadCell.Value)
+  newYear = year(dayToLoadCell.Value - 1)
+  
+  If actualYear = newYear Then
+    dayToLoadCell.Value = dayToLoadCell.Value - 1
+    DayDataLoad
+  Else
+    MsgBox str_sh6_errPrevYear
+  End If
+End Sub
