@@ -11,6 +11,9 @@ Public Const str_sh2_savingWarn = "Möchten Sie den Schichtplan wirklich speiche
 Public Const str_sh2_moreAbsence = "Und {0} weitere"
 Public Const str_sh2_historySPWU = "Der Schichtplan für KW{0} wurde geändert"
 Public Const str_sh2_historySPWK = "Der Schichtplan für den {0} (KW {1}) wurde geändert"
+Public Const str_sh2_errNextYear = "Achtung!" & vbCrLf & "Sie können nicht ins nächste Jahr gehen"
+Public Const str_sh2_errPrevYear = "Achtung!" & vbCrLf & "Sie können nicht zum Vorjahr wechseln"
+Public Const str_sh2_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes Jahr als das in der Datei"
 
 ' Sheet 5
 Public Const str_sh5_losingDataWarn = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
@@ -49,6 +52,8 @@ Public Const str_fRF_absenceTableReset = "Abwesenheitstabelle wurde zurückgeset
 
 ' Global
 Public Const str_warnBoxTitle = "ACHTUNG"
+Public Const str_unspecifiedHistory = "Unspecified event detected"
+Public Const str_notYetReady = "Funktion noch nicht implementiert"
 
 ' Reset functions history
 Public Const str_resetAbsenceStatus = "DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT"

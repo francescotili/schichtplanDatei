@@ -17,7 +17,7 @@ Private weekData As Collection
 Private weekNumber As Double
 
 Private nextDayBtn, prevDayBtn As Shape
-Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWeekCell, changesDetectedCell, lastUsedCell As Range
+Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWeekCell, changesDetectedCell, lastUsedCell, maxKW As Range
 
 Private Sub Sh2_WeekSaveBtn_Click()
   WeekDataSave
@@ -37,6 +37,7 @@ Public Sub Worksheet_Activate()
   Set actualYearCell = Sheet3.Range("Global_ActualYear")
   Set changesDetectedCell = Range("Sh2_ChangesDetected")
   Set lastUsedCell = Range("Sh2_LastCell")
+  Set maxKW = Sheet3.Range("Global_MaxKW")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub
@@ -470,3 +471,20 @@ Public Sub MasterWeekImport()
   Application.ScreenUpdating = True
 End Sub
 
+Public Sub NextWeekLoad()
+  If (weekToLoadCell.Value + 1) <= maxKW Then
+    weekToLoadCell.Value = weekToLoadCell.Value + 1
+    WeekDataLoad
+  Else
+    MsgBox str_sh2_errNextYear
+  End If
+End Sub
+
+Public Sub PreviousWeekLoad()
+  If (weekToLoadCell.Value - 1) <> 0 Then
+    weekToLoadCell.Value = weekToLoadCell.Value - 1
+    WeekDataLoad
+  Else
+    MsgBox str_sh2_errPrevYear
+  End If
+End Sub
