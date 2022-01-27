@@ -55,6 +55,10 @@ Public Sub notYetReady()
   MsgBox str_notYetReady
 End Sub
 
+Public Sub notActive()
+  MsgBox str_notActive
+End Sub
+
 Public Function IsInArray(stringToFind As String, dataArray As Variant) As Boolean
   For Each dataItem In dataArray
     If CStr(dataItem) = stringToFind Then

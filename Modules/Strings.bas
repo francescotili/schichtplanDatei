@@ -54,6 +54,7 @@ Public Const str_fRF_absenceTableReset = "Abwesenheitstabelle wurde zurückgeset
 Public Const str_warnBoxTitle = "ACHTUNG"
 Public Const str_unspecifiedHistory = "Unspecified event detected"
 Public Const str_notYetReady = "Funktion noch nicht implementiert"
+Public Const str_notActive = "Diese Funktion ist deaktiviert"
 
 ' Reset functions history
 Public Const str_resetAbsenceStatus = "DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT"
