@@ -447,6 +447,14 @@ End Sub
 Public Sub MasterWeekImport()
   Dim startCol, startRow As Integer
   
+  If weekStatusCell.Value <> 0 Then
+    answer = MsgBox(str_sh2_losingDataImport, vbExclamation + vbYesNo, str_warnBoxTitle)
+    If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  Else
+    GoTo Proceed
+  End If
+  
+Proceed:
   startRowMW = 7
   startRow = 7
   startCol = 7
@@ -469,6 +477,8 @@ Public Sub MasterWeekImport()
   Next j
   
   Application.ScreenUpdating = True
+
+Abort:
 End Sub
 
 Public Sub NextWeekLoad()

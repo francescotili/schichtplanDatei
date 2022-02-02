@@ -6,7 +6,8 @@ Attribute VB_Name = "Strings"
 ' --------------------------------------------
 
 ' Sheet 2
-Public Const str_sh2_losingDataWarn = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
+Public Const str_sh2_losingDataWarn = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren." & vbCrLf & "Fortfahren?"
+Public Const str_sh2_losingDataImport = "Für diese Woche gibt es bereits eine Pianifikation! Wenn Sie fortfahren, wird der Plan überschrieben." & vbCrLf & "Fortfahren?"
 Public Const str_sh2_savingWarn = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
 Public Const str_sh2_moreAbsence = "Und {0} weitere"
 Public Const str_sh2_historySPWU = "Der Schichtplan für KW{0} wurde geändert"
