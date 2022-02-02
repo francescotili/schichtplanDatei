@@ -40,6 +40,9 @@ Public Const str_sh7_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes
 ' Sheet 10
 Public Const str_sh10_history = "Im Registerkarte ""Feiertage"" wurden änderungen festgestellt"
 
+' Sheet 11
+Public Const str_sh11_history = "Im Registerkarte ""Masterwoche"" wurden änderungen festgestellt"
+
 ' Form - Mitarbeiter_Manage
 Public Const str_fMM_noWorkerSelected = "Bitte einen Mitarbeiter aus der Liste auswählen!"
 Public Const str_fMM_deleteConfirmation = "ACHTUNG!" & vbCrLf & "Mitarbeiter-Nr. {0} wird endgultig gelöscht." & vbCrLf & "Wirklich fortfahren ??"

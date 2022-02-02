@@ -60,8 +60,10 @@ Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shif
   Select Case KeyCode
     Case 9 ' Tab
       Application.ActiveCell.Offset(0, 1).Activate
+      saveHistory str_sh11_history
     Case 13 ' Enter
       Application.ActiveCell.Offset(1, 0).Activate
+      saveHistory str_sh11_history
     Case 27 ' ESC
       With sheet.OLEObjects("TempCombo")
         .Object.Value = ""
@@ -69,4 +71,9 @@ Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shif
       End With
       Application.ActiveCell.Activate
   End Select
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+  ' Monitor changes in Masterwoche registerkarte
+  saveHistory str_sh11_history
 End Sub
