@@ -398,6 +398,9 @@ Private Sub RestoreButtons()
     .Width = 15
     .Left = ActiveCell.Left - 5
   End With
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 End Sub
 
