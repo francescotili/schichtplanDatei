@@ -21,5 +21,7 @@ Private Sub Workbook_Open()
   On Error Resume Next
   Call Sheet2.Worksheet_Activate ' Week bearbeiten
   Call Sheet5.Worksheet_Activate ' Absence bearbeiten
+  Call Sheet6.Worksheet_Activate ' ÜB Tag
+  Call Sheet7.Worksheet_Activate ' ÜB Woche
   On Error GoTo 0
 End Sub
