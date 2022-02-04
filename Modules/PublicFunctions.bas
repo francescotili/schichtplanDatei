@@ -8,6 +8,7 @@ Attribute VB_Name = "PublicFunctions"
 Public Sub CleanHistory()
   Set historyList = New history
   historyList.Clean
+  saveHistory str_historyCleaned
 End Sub
 
 Public Sub MitarbeiterManage()

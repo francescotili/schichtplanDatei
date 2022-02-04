@@ -7,7 +7,7 @@ Attribute VB_Name = "Globals"
 
 ' Global variables
 Public Const GAdminPassword As String = "franci2021"
-Public Const GMaxHistoryEntries As Integer = 15
+Public Const GMaxHistoryEntries As Integer = 25
 
 ' Table names
 Public Const GWorkerTableName As String = "MitarbeiterList"

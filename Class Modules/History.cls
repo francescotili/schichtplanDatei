@@ -61,4 +61,8 @@ Public Sub Clean()
       table.ListRows(GMaxHistoryEntries + 1).Delete
     Next i
   End If
+  
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 End Sub
