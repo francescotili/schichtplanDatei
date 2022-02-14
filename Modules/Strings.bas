@@ -15,6 +15,7 @@ Public Const str_sh2_historySPWK = "Der Schichtplan für den {0} (KW {1}) wurde 
 Public Const str_sh2_errNextYear = "Achtung!" & vbCrLf & "Sie können nicht ins nächste Jahr gehen"
 Public Const str_sh2_errPrevYear = "Achtung!" & vbCrLf & "Sie können nicht zum Vorjahr wechseln"
 Public Const str_sh2_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes Jahr als das in der Datei"
+Public Const str_sh2_errCutMode = "Bitte NICHT ausschneiden (Strg+X), da dies zu Problemen auf dem Blatt führt! Verwenden Sie das normale Kopieren (Strg+C) und Einfügen (Strg+V), danke."
 
 ' Sheet 5
 Public Const str_sh5_losingDataWarn = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"

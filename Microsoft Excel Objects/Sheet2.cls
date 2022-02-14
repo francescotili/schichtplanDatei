@@ -387,40 +387,46 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   Dim ComboObj As OLEObject
   Dim ComboListArr As Variant
   
-  If Application.CutCopyMode = 0 Then
-    ' Initialize Combo Object for Autofill
-    Set ComboObj = sheet.OLEObjects("TempCombo")
-    With ComboObj
-      .Visible = False
-      .ListFillRange = "=Personal!" & Sheet9.ListObjects(GWorkerTableName).ListColumns(4).DataBodyRange.Address
-      .LinkedCell = ""
-    End With
-        
-    ' Move and visualize ComboBox if needed: only in worker range and if cell is empty
-    If Not Application.Intersect(Target, Range("G7:J110")) Is Nothing Then
-      If Target.Areas.Count = 1 _
-      And Target.Columns.Count = 1 _
-      And Target.Rows.Count = 3 _
-      And Target.Cells(1).Value = "" Then
-        lastUsedCell.Value = Target.Address
-        sheet.Unprotect Password:=GAdminPassword
-        
-        With ComboObj
-          .Visible = True
-          .Left = Target.Left + 1
-          .Top = Target.Top + 1
-          .Width = Target.Width - 1
-          .Height = Target.Height - 1
-          .LinkedCell = Target.Address
-        End With
-  
-        ComboObj.Activate
-        Me.TempCombo.DropDown
-        
-        sheet.Protect Password:=GAdminPassword
+  Select Case Application.CutCopyMode
+    Case Is = False
+      ' Initialize Combo Object for Autofill
+      Set ComboObj = sheet.OLEObjects("TempCombo")
+      With ComboObj
+        .Visible = False
+        .ListFillRange = "=Personal!" & Sheet9.ListObjects(GWorkerTableName).ListColumns(4).DataBodyRange.Address
+        .LinkedCell = ""
+      End With
+      
+      ' Move and visualize ComboBox if needed: only in worker range and if cell is empty
+      If Not Application.Intersect(Target, Range("G7:J110")) Is Nothing Then
+        If Target.Areas.Count = 1 _
+        And Target.Columns.Count = 1 _
+        And Target.Rows.Count = 3 _
+        And Target.Cells(1).Value = "" Then
+          lastUsedCell.Value = Target.Address
+          sheet.Unprotect Password:=GAdminPassword
+          
+          With ComboObj
+            .Visible = True
+            .Left = Target.Left + 1
+            .Top = Target.Top + 1
+            .Width = Target.Width - 1
+            .Height = Target.Height - 1
+            .LinkedCell = Target.Address
+          End With
+    
+          ComboObj.Activate
+          Me.TempCombo.DropDown
+          
+          sheet.Protect Password:=GAdminPassword
+        End If
       End If
-    End If
-  End If
+    Case Is = xlCopy
+      ' do nothing
+    Case Is = xlCut
+      MsgBox str_sh2_errCutMode
+      Application.CutCopyMode = False ' Cancel clipboard and block cut operation
+  End Select
 End Sub
 
 Private Sub TempCombo_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
