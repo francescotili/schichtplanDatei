@@ -15,13 +15,13 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub textboxName_Change()
   ' When the name changes, it changes also the visualisation name
-  textboxVisNameOverride.Value = Left(textboxName.Value, 1) & ". " & textboxSurname.Value
+  textboxVisNameOverride.Value = textboxSurname.Value & " " & Left(textboxName.Value, 1) & "."
   CheckValidity
 End Sub
 
 Private Sub textboxSurname_Change()
   ' When the surname changes, it changes also the visualisation name
-  textboxVisNameOverride.Value = Left(textboxName.Value, 1) & ". " & textboxSurname.Value
+  textboxVisNameOverride.Value = textboxSurname.Value & " " & Left(textboxName.Value, 1) & "."
   CheckValidity
 End Sub
 
@@ -45,7 +45,7 @@ Private Sub Button_Save_Click()
     textboxSurname.Value, _
     textboxVisNameOverride.Value, _
     textboxDepartment.Value, _
-    0 ' TODO: use this field for "fremdarbeiter"
+    0 ' Empty field for future use cases
     
   ' Save or edit the worker
   workersList.Save worker
