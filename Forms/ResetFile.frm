@@ -41,7 +41,7 @@ Private Sub Proceed_Click()
   ' Delete workers database and update also vacation list
   ' To be reimplemented, because it doesn't work well with Sheet5.TableInitialize
 '  If Workers_Check = True Then
-'    Application.StatusBar = "Personallist wurde zurueckgesetzt. Bitte warten!"
+'    Application.StatusBar = "Personallist wurde zurückgesetzt. Bitte warten!"
 '    Dim workersList As New MitarbeiterList
 '    workersList.Reset
 '  End If

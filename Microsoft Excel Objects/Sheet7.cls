@@ -16,7 +16,7 @@ Public sheet As Worksheet
 Private weekData As Collection
 Private weekNumber As Double
 
-Private weekToLoadCell, activeWeekCell, actualYearCell, weekStatusCell, weekStatusLabel As Range
+Private weekToLoadCell, activeWeekCell, actualYearCell, weekStatusCell, weekStatusLabel, maxKW As Range
 
 Public Sub Worksheet_Activate()
   Set sheet = Sheet7
@@ -26,6 +26,7 @@ Public Sub Worksheet_Activate()
   Set weekStatusCell = Range("Sh7_WeekStatusCell")
   Set actualYearCell = Sheet3.Range("Global_ActualYear")
   Set weekStatusLabel = Range("Sh7_WeekStatusLabel")
+  Set maxKW = Sheet3.Range("Global_MaxKW")
   
   WeekDataLoad ' Needed to avoid errors when returning to the sheet
 End Sub

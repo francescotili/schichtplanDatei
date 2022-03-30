@@ -115,7 +115,7 @@ Public Sub Save(newWorker As Mitarbeiter)
       table.DataBodyRange(1, (j + 1)).Value = entry(j)
     Next j
     ' Update history
-    saveHistory ("Neu Mitarbeiter (" & newWorker.personalCode & ") wurde hinzugef�gt")
+    saveHistory StringFormat(str_historyNewWorker, newWorker.personalCode)
     ' Add the new worker in the Vacation Plan
     Dim vacationList As New AbwesenheitsList
     vacationList.WorkerAdd newWorker
@@ -123,7 +123,7 @@ Public Sub Save(newWorker As Mitarbeiter)
     For j = LBound(entry) To UBound(entry)
       table.DataBodyRange(existingWorker, (j + 1)).Value = entry(j)
     Next j
-    saveHistory ("Mitarbeiter-Nr. " & newWorker.personalCode & " wurde bearbeiten")
+    saveHistory StringFormat(str_historyEditedWorker, newWorker.personalCode)
   End If
   
   ' Sort user for surname
@@ -184,7 +184,7 @@ Public Sub Reset()
   End If
   
   ' Save history entry
-  saveHistory ("DIE MITARBEITERLISTE WURDE GELÖSCHT")
+  saveHistory (str_resetWorkerList)
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True

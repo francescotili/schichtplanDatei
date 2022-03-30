@@ -19,8 +19,8 @@ Public Const str_sh2_errCutMode = "Bitte NICHT ausschneiden (Strg+X), da dies zu
 
 ' Sheet 5
 Public Const str_sh5_losingDataWarn = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
-Public Const str_sh5_newWorkerAdded = "Ein neuer Mitarbeiter wurde dem Plan hinzugefügt"
-Public Const str_sh5_workerDeleted = "Ein Mitarbeiter wurde aus dem Plan gelöscht"
+Public Const str_sh5_newWorkerAdded = "Ein neuer Mitarbeiter wurde dem Plan hinzugefügt" & vbCrLf & "Mitarbeiter-Nr. {0}"
+Public Const str_sh5_workerDeleted = "Ein Mitarbeiter wurde aus dem Plan gelöscht" & vbCrLf & "Mitarbeiter-Nr. {0}"
 Public Const str_sh5_savingWarn = "Möchten Sie den Abwesenheitplan wirklich speichern?" & vbCrLf & "Vorhandene Daten werden überschrieben!"
 Public Const str_sh2_history = "Der Abwesenheitsplan wurde geändert"
 
@@ -61,6 +61,8 @@ Public Const str_unspecifiedHistory = "Unspecified event detected"
 Public Const str_historyCleaned = "Die Historie wurde von alten Einträgen bereinigt"
 Public Const str_notYetReady = "Funktion noch nicht implementiert"
 Public Const str_notActive = "Diese Funktion ist deaktiviert"
+Public Const str_historyNewWorker = "Neu Mitarbeiter ({0}) wurde hinzugefügt"
+Public Const str_historyEditedWorker = "Mitarbeiter-Nr. {0} wurde bearbeiten"
 
 ' Reset functions history
 Public Const str_resetAbsenceStatus = "DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT"

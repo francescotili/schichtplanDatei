@@ -73,14 +73,14 @@ Proceed:
   For Each workerDB In workersCodesDB
     If Not IsInArray(CStr(workerDB), workersCodes) Then
       AddWorker CStr(workerDB)
-      MsgBox str_sh5_newWorkerAdded & vbCrLf & "Mitarbeiter-Nr. " & workerDB
+      MsgBox StringFormat(str_sh5_newWorkerAdded, workerDB)
     End If
   Next
   
   ' Check if all the workers in the table are in the DB, if not then delete it
   For Each worker In workersCodes
     If Not IsInArray(CStr(worker), workersCodesDB) Then
-      MsgBox str_sh5_workerDeleted & vbCrLf & "Mitarbeiter-Nr. " & worker
+      MsgBox StringFormat(str_sh5_workerDeleted, worker)
       DeleteWorker CStr(worker)
     End If
   Next

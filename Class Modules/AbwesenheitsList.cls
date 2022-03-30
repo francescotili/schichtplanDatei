@@ -71,7 +71,7 @@ Public Sub GenerateYear(year As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT")
+  saveHistory (str_resetAbsenceStatus)
 
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True

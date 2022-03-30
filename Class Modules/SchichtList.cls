@@ -185,7 +185,7 @@ Public Sub GenerateYear(passedYear As Integer)
   Next i
   
   ' Save history entry
-  saveHistory ("DER SCHICHTPLAN WURDE ZURÜCKGESETZT")
+  saveHistory (str_resetShiftplan)
   
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
