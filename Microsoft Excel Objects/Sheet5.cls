@@ -174,6 +174,10 @@ Proceed:
           If CStr(table.DataBodyRange(j, i)) = "a" Then
             table.DataBodyRange(j, i) = "A"
           End If
+          ' Convert "s" to "S"
+          If CStr(table.DataBodyRange(j, i)) = "s" Then
+            table.DataBodyRange(j, i) = "S"
+          End If
           
           workerAbsence(j - 1) = table.DataBodyRange(j, i)
         Next j
@@ -359,8 +363,10 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     moveColLBtn.Visible = msoFalse
   End Select
   
-  moveColRBtn.Left = Target.Left + 20
-  moveColLBtn.Left = Target.Left - 5
+  moveColRBtn.Left = Target.Left + 25
+  moveColLBtn.Left = Target.Left - 10
+  moveColRBtn.Width = 20
+  moveColLBtn.Width = 20
 End Sub
 
 Public Sub MoveColToRight()
@@ -391,12 +397,12 @@ End Sub
 
 Private Sub RestoreButtons()
   With sheet.Shapes("Sh5_MoveColRightBtn")
-    .Width = 15
-    .Left = ActiveCell.Left + 20
+    .Width = 20
+    .Left = ActiveCell.Left + 25
   End With
   With sheet.Shapes("Sh5_MoveColLeftBtn")
-    .Width = 15
-    .Left = ActiveCell.Left - 5
+    .Width = 20
+    .Left = ActiveCell.Left - 10
   End With
 
   ' Enable screen Updating and protection
@@ -461,6 +467,7 @@ Private Sub ResetConditionalFormatting()
       
       ' Add conditional formatting for vacation type A (Abwesend)
       .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""A"""
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""S"""
     End With
     
     ' Modify conditional formatting - do not modify the order, Excel has a lot of bugs
@@ -473,10 +480,23 @@ Private Sub ResetConditionalFormatting()
         .Font.Bold = True
       End With
     End With
+    With table.DataBodyRange
+      With .FormatConditions(5)
+        .StopIfTrue = False
+        .Borders.Color = RGB(55, 86, 35)
+        .Font.Color = RGB(55, 86, 35)
+        .Font.Bold = True
+      End With
+    End With
     
     With table.DataBodyRange
       With .FormatConditions(4)
         .Interior.Color = RGB(180, 198, 231)
+      End With
+    End With
+    With table.DataBodyRange
+      With .FormatConditions(5)
+        .Interior.Color = RGB(198, 224, 180)
       End With
     End With
   End If
