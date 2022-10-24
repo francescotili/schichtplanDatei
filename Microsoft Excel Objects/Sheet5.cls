@@ -178,6 +178,14 @@ Proceed:
           If CStr(table.DataBodyRange(j, i)) = "s" Then
             table.DataBodyRange(j, i) = "S"
           End If
+          ' Convert "h" to "H"
+          If CStr(table.DataBodyRange(j, i)) = "h" Then
+            table.DataBodyRange(j, i) = "H"
+          End If
+          ' Convert "e" to "E"
+          If CStr(table.DataBodyRange(j, i)) = "e" Then
+            table.DataBodyRange(j, i) = "E"
+          End If
           
           workerAbsence(j - 1) = table.DataBodyRange(j, i)
         Next j
@@ -292,12 +300,12 @@ Public Sub TableInitialize(year As Integer)
   ProtectShapes
   
   ' Delete every worker column
-  If table.ListColumns.Count > (startWorkerColumn - 1) Then
-    maxColumn = table.ListColumns.Count
-    For i = startWorkerColumn To maxColumn
-      sheet.Columns(startWorkerColumn + 4).EntireColumn.Delete
-    Next i
-  End If
+  'If table.ListColumns.Count > (startWorkerColumn - 1) Then
+  '  maxColumn = table.ListColumns.Count
+  '  For i = startWorkerColumn To maxColumn
+  '    sheet.Columns(startWorkerColumn + 4).EntireColumn.Delete
+  '  Next i
+  'End If
   
   ' Delete all the rows
   With table
@@ -307,14 +315,14 @@ Public Sub TableInitialize(year As Integer)
   End With
   
   ' Get the workers Data
-  Dim absenceList As New AbwesenheitsList
-  Dim workersCodes() As String
-  workersCodes = absenceList.AllMitarbeiter
+  'Dim absenceList As New AbwesenheitsList
+  'Dim workersCodes() As String
+  'workersCodes = absenceList.AllMitarbeiter
   
   ' Generate columns for every worker
-  For i = LBound(workersCodes) To UBound(workersCodes)
-    AddWorker CStr(workersCodes(i))
-  Next i
+  'For i = LBound(workersCodes) To UBound(workersCodes)
+  '  AddWorker CStr(workersCodes(i))
+  'Next i
   
   ' Generate rows with date
   startDate = DateSerial(year, 1, 1)
@@ -326,6 +334,7 @@ Public Sub TableInitialize(year As Integer)
   Next i
   
   ' Reset conditional formatting
+  table.DataBodyRange.Interior.Color = xlNone
   ResetConditionalFormatting
   
   ' Reset change detected Cell
@@ -468,6 +477,8 @@ Private Sub ResetConditionalFormatting()
       ' Add conditional formatting for vacation type A (Abwesend)
       .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""A"""
       .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""S"""
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""H"""
+      .FormatConditions.Add Type:=xlExpression, Formula1:="=J6=""E"""
     End With
     
     ' Modify conditional formatting - do not modify the order, Excel has a lot of bugs
@@ -488,6 +499,22 @@ Private Sub ResetConditionalFormatting()
         .Font.Bold = True
       End With
     End With
+    With table.DataBodyRange
+      With .FormatConditions(6)
+        .StopIfTrue = False
+        .Borders.Color = RGB(0, 154, 155)
+        .Font.Color = RGB(0, 154, 155)
+        .Font.Bold = True
+      End With
+    End With
+    With table.DataBodyRange
+      With .FormatConditions(7)
+        .StopIfTrue = False
+        .Borders.Color = RGB(131, 60, 12)
+        .Font.Color = RGB(131, 60, 12)
+        .Font.Bold = True
+      End With
+    End With
     
     With table.DataBodyRange
       With .FormatConditions(4)
@@ -497,6 +524,16 @@ Private Sub ResetConditionalFormatting()
     With table.DataBodyRange
       With .FormatConditions(5)
         .Interior.Color = RGB(198, 224, 180)
+      End With
+    End With
+    With table.DataBodyRange
+      With .FormatConditions(6)
+        .Interior.Color = RGB(217, 236, 239)
+      End With
+    End With
+    With table.DataBodyRange
+      With .FormatConditions(7)
+        .Interior.Color = RGB(252, 228, 214)
       End With
     End With
   End If
