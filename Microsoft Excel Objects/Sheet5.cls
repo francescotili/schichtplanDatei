@@ -347,7 +347,7 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
   Sh5_PlanSaveBtn.Enabled = False
-  If Target.row > 11 Then ' Everything under Row 11 will trigger
+  If Target.row > 5 Then ' Everything under Row 5 will trigger
     changesDetectedCell.Value = True
     Sh5_PlanSaveBtn.Enabled = True
   End If
