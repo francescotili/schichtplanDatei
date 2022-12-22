@@ -49,8 +49,16 @@ Private Sub Proceed_Click()
   ' Update global variable
   Range("Global_ActualYear").Value = JahrTextbox.Value
   
+  ' Reset all the views
+  Dim firstDay As Date
+  firstDay = DateSerial(JahrTextbox.Value, 1, 1)
+  Range("Sh6_DayToLoadCell").Value = firstDay
+  Range("Sh7_WeekToLoadCell").Value = 1
+  Range("Sh2_WeekToLoadCell").Value = 1
+  
   Application.StatusBar = False
   Unload Me
+  MsgBox "Erfolgreich zurückgesetzt!"
 End Sub
 
 Private Sub UserForm_Initialize()
