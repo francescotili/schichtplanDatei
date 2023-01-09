@@ -28,7 +28,7 @@ Public Enum WeekStatus
   Custom
 End Enum
 
-Public Enum WeekDay
+Public Enum WeekDays
   ' No weekDay specified
   Unknown
   Monday

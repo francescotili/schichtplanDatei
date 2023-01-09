@@ -47,19 +47,19 @@ Private Sub UserForm_Activate()
   Set activeDayCell = Range("Sh2_ActiveDay")
   
   Select Case activeDayCell.Value
-  Case WeekDay.Monday
+  Case WeekDays.Monday
     Me.MoCheckbox.Value = True
     Me.MoCheckbox.Enabled = False
-  Case WeekDay.Tuesday
+  Case WeekDays.Tuesday
     Me.DiCheckbox.Value = True
     Me.DiCheckbox.Enabled = False
-  Case WeekDay.Wednesday
+  Case WeekDays.Wednesday
     Me.MiCheckbox.Value = True
     Me.MiCheckbox.Enabled = False
-  Case WeekDay.Thursday
+  Case WeekDays.Thursday
     Me.DoCheckbox.Value = True
     Me.DoCheckbox.Enabled = False
-  Case WeekDay.Friday
+  Case WeekDays.Friday
     Me.FrCheckbox.Value = True
     Me.FrCheckbox.Enabled = False
   End Select

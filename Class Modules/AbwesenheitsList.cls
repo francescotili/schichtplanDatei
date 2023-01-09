@@ -43,7 +43,7 @@ Public Sub WorkerAdd(worker As Mitarbeiter)
   sheet.Protect Password:=GAdminPassword
 End Sub
 
-Public Sub GenerateYear(year As Integer)
+Public Sub GenerateYear(Year As Integer)
   Dim startDate, endDate As Date
   Dim numOfDays As Long
   Dim i As Integer
@@ -53,8 +53,8 @@ Public Sub GenerateYear(year As Integer)
   sheet.Unprotect Password:=GAdminPassword
   
   ' Generate start und end date from form
-  startDate = DateSerial(year, 1, 1)
-  endDate = DateSerial(year, 12, 31)
+  startDate = DateSerial(Year, 1, 1)
+  endDate = DateSerial(Year, 12, 31)
   
   ' Clear vacation table data
   With table

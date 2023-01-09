@@ -286,7 +286,7 @@ Private Sub DeleteWorker(workerPCode As String)
   changesDetectedCell.Value = False
 End Sub
 
-Public Sub TableInitialize(year As Integer)
+Public Sub TableInitialize(Year As Integer)
   ' These declaration are needed when the Sub is called from other Sheets
   Set sheet = Sheet5
   Set table = sheet.ListObjects.Item(GAbsencesModifyTableName)
@@ -325,8 +325,8 @@ Public Sub TableInitialize(year As Integer)
   'Next i
   
   ' Generate rows with date
-  startDate = DateSerial(year, 1, 1)
-  endDate = DateSerial(year, 12, 31)
+  startDate = DateSerial(Year, 1, 1)
+  endDate = DateSerial(Year, 12, 31)
   numOfDays = DateDiff("d", startDate, endDate)
   For i = 0 To numOfDays
     table.ListRows.Add

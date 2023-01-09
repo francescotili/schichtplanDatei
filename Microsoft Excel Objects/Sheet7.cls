@@ -42,7 +42,7 @@ Public Sub WeekDataLoad()
   ShiftDataLoad
   
   ' Workflow based on week status (read at monday)
-  Select Case weekData.Item(WeekDay.Monday).shiftStatus
+  Select Case weekData.Item(WeekDays.Monday).shiftStatus
     Case WeekStatus.Emtpy
       SetEmptyMode
     Case WeekStatus.Normal
@@ -83,8 +83,8 @@ Private Sub AbsenceDataLoad()
   
   ' Get data and populate
   i = 0
-  For Each weekDate In weekDates
-    dayVacation = absenceList.DayAbsences(DateSerial(year(weekDate), Month(weekDate), day(weekDate)))
+  For Each WeekDate In weekDates
+    dayVacation = absenceList.DayAbsences(DateSerial(Year(WeekDate), Month(WeekDate), day(WeekDate)))
     
     Select Case UBound(dayVacation)
     Case Is > 65
@@ -135,7 +135,7 @@ Public Sub ShiftDataLoad()
   Set weekData = shiftList.weekData
 End Sub
 
-Private Sub Populate(passedDay As WeekDay)
+Private Sub Populate(passedDay As WeekDays)
   ' This function take the day of the week and populate the various
   ' sections of the Worksheet.
   ' Warning: before calling this function, please load and pass the right data!
@@ -222,7 +222,7 @@ Public Sub PreviousWeekLoad()
 End Sub
 
 Public Sub GoToActualWeek()
-  If actualYearCell = year(Date) Then
+  If actualYearCell = Year(Date) Then
     weekToLoadCell.Value = WorksheetFunction.WeekNum(Now, 21)
     WeekDataLoad
   Else

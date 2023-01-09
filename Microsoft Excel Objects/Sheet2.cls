@@ -61,7 +61,7 @@ Proceed:
   Load
   
   ' Worflow based on week status (read at monday)
-  Select Case weekData.Item(WeekDay.Monday).shiftStatus
+  Select Case weekData.Item(WeekDays.Monday).shiftStatus
     Case WeekStatus.Emtpy
       SetEmptyMode
     Case WeekStatus.Normal
@@ -103,8 +103,8 @@ Private Sub AbsenceDataLoad()
   
   ' Get data and populate
   i = 0
-  For Each weekDate In weekDates
-    dayVacation = absenceList.DayAbsences(DateSerial(year(weekDate), Month(weekDate), day(weekDate)))
+  For Each WeekDate In weekDates
+    dayVacation = absenceList.DayAbsences(DateSerial(Year(WeekDate), Month(WeekDate), day(WeekDate)))
     
     Select Case UBound(dayVacation)
     Case Is > 98
@@ -162,13 +162,13 @@ Private Sub WeekDataSave()
     msgAnswer = MsgBox(str_sh2_savingWarn, vbQuestion + vbYesNo, "Fortfahren?")
     If msgAnswer = vbYes Then
       Sheet1.Unprotect Password:=GAdminPassword
-      Save WeekDay.Unknown
+      Save WeekDays.Unknown
       Sheet1.Protect Password:=GAdminPassword
     End If
   End Select
 End Sub
 
-Public Sub Save(passedDay As WeekDay)
+Public Sub Save(passedDay As WeekDays)
   Dim startRow As Integer
   Dim shiftsStartCol, startWorkPlace, endWorkPlace As Integer
   Dim workPlaces(3, 32) As String
@@ -191,7 +191,7 @@ Public Sub Save(passedDay As WeekDay)
   Dim d, s As Long
   Dim tempWorkPlaces(32) As String
   Select Case activeDayCell.Value
-    Case WeekDay.Unknown ' Normal Modus
+    Case WeekDays.Unknown ' Normal Modus
       saveHistory StringFormat(str_sh2_historySPWU, activeWeekCell.Value)
       
       For d = 1 To 5 ' Days of the week
@@ -246,7 +246,7 @@ Private Sub Load()
   Set weekData = shiftList.weekData
 End Sub
 
-Private Sub Populate(passedDay As WeekDay)
+Private Sub Populate(passedDay As WeekDays)
   ' This function take the day of the week and populate the various
   ' sections of the Worksheet.
   ' Warning: before calling this function, please load and pass the right data!
@@ -303,7 +303,7 @@ End Sub
 
 Private Sub SetNormalMode()
   weekStatusCell.Value = WeekStatus.Normal
-  activeDayCell.Value = WeekDay.Unknown
+  activeDayCell.Value = WeekDays.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
   Populate Monday
@@ -312,7 +312,7 @@ End Sub
 
 Private Sub SetCustomMode()
   weekStatusCell.Value = WeekStatus.Custom
-  activeDayCell.Value = WeekDay.Monday
+  activeDayCell.Value = WeekDays.Monday
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoTrue
   Populate Monday
@@ -321,7 +321,7 @@ End Sub
 
 Private Sub SetEmptyMode()
   weekStatusCell.Value = WeekStatus.Emtpy
-  activeDayCell.Value = WeekDay.Unknown
+  activeDayCell.Value = WeekDays.Unknown
   prevDayBtn.Visible = msoFalse
   nextDayBtn.Visible = msoFalse
   EmptyPlan
@@ -338,8 +338,8 @@ Public Sub GoToNextDay()
   End If
 Proceed:
   activeDayCell.Value = activeDayCell.Value + 1
-  If activeDayCell.Value > WeekDay.Monday Then prevDayBtn.Visible = msoTrue
-  If activeDayCell.Value = WeekDay.Friday Then nextDayBtn.Visible = msoFalse
+  If activeDayCell.Value > WeekDays.Monday Then prevDayBtn.Visible = msoTrue
+  If activeDayCell.Value = WeekDays.Friday Then nextDayBtn.Visible = msoFalse
   Populate activeDayCell.Value
 Abort:
 End Sub
@@ -353,8 +353,8 @@ Public Sub GoToPreviousDay()
   End If
 Proceed:
   activeDayCell.Value = activeDayCell.Value - 1
-  If activeDayCell.Value = WeekDay.Monday Then prevDayBtn.Visible = msoFalse
-  If activeDayCell.Value < WeekDay.Friday Then nextDayBtn.Visible = msoTrue
+  If activeDayCell.Value = WeekDays.Monday Then prevDayBtn.Visible = msoFalse
+  If activeDayCell.Value < WeekDays.Friday Then nextDayBtn.Visible = msoTrue
   Populate activeDayCell.Value
 Abort:
 End Sub
