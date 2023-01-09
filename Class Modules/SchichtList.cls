@@ -97,11 +97,12 @@ Public Sub WeekRead(weekNumber As Double)
   Me.Load
   
   ' Define the year, reading the first date of shifts database
-  shiftYear = year(data.Item(1).shiftDate)
+  shiftYear = Year(data.Item(1).shiftDate)
   
   ' Generate start and end dates from passed week number
-  startDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, -4))
-  endDate = DateAdd("ww", weekNumber, DateSerial(shiftYear, 1, 2))
+  ' From https://www.snb-vba.eu/VBA_ISO_weeknummer_en.html
+  startDate = 7 * (weekNumber - 1) + DateSerial(shiftYear, 1, 4) - WeekDay(DateSerial(shiftYear, 1, 4), 2) + 1
+  endDate = 7 * (weekNumber - 1) + DateSerial(shiftYear, 1, 4) - WeekDay(DateSerial(shiftYear, 1, 4), 2) + 5
   
   ' Generate shiftCodes to search and read
   numOfDay = DateDiff("d", startDate, endDate)
@@ -133,7 +134,7 @@ Public Sub DayRead(dayDate As Date)
   Me.Load
   
   ' Define the year, reading the first date of shifts database
-  shiftYear = year(dayDate)
+  shiftYear = Year(dayDate)
   
   ' Generate shiftCodes to search and read
   tempShiftCodes = generateShiftsCode(dayDate)
@@ -205,7 +206,7 @@ Private Function generateShiftsCode(inputDate As Date) As String()
   
   For i = 0 To 3
     shiftCodes(i) = _
-      year(inputDate) & _
+      Year(inputDate) & _
       Format(Month(inputDate), "00") & _
       Format(day(inputDate), "00") & _
       shiftNames(i)
