@@ -1,12 +1,3 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "AbwesenheitsList"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
 Private sheet As Worksheet
 Private table As ListObject
 
@@ -201,3 +192,4 @@ End Sub
 Public Sub ProtectionON()
   sheet.Protect Password:=GAdminPassword
 End Sub
+

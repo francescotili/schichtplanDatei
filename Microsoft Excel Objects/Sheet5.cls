@@ -1,12 +1,3 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "Sheet5"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = True
 ' --------------------------------------------
 ' ABSENCE MANAGER FUNCTIONS
 ' Manage methods for getting all the data for
@@ -538,3 +529,4 @@ Private Sub ResetConditionalFormatting()
     End With
   End If
 End Sub
+

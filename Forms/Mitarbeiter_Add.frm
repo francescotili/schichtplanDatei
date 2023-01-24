@@ -1,18 +1,3 @@
-VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Mitarbeiter_Add 
-   Caption         =   "Neu Mitarbeiter"
-   ClientHeight    =   3120
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   4485
-   OleObjectBlob   =   "Mitarbeiter_Add.frx":0000
-   StartUpPosition =   1  'CenterOwner
-End
-Attribute VB_Name = "Mitarbeiter_Add"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = False
 Private Sub textboxName_Change()
   ' When the name changes, it changes also the visualisation name
   textboxVisNameOverride.Value = textboxSurname.Value & " " & Left(textboxName.Value, 1) & "."

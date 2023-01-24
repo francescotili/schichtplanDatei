@@ -1,18 +1,3 @@
-VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Sheet2_CustomSave 
-   Caption         =   "Speichern"
-   ClientHeight    =   4320
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   4500
-   OleObjectBlob   =   "Sheet2_CustomSave.frx":0000
-   StartUpPosition =   1  'CenterOwner
-End
-Attribute VB_Name = "Sheet2_CustomSave"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = False
 Private Sub SaveButton_Click()
   Application.ScreenUpdating = False
   Sheet1.Unprotect Password:=GAdminPassword

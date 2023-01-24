@@ -1,4 +1,3 @@
-Attribute VB_Name = "PublicFunctions"
 ' --------------------------------------------
 ' MODULE FOR GLOBAL FUNCTIONS
 ' Here are functions used throughout the Excel

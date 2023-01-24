@@ -1,4 +1,3 @@
-Attribute VB_Name = "Strings"
 ' --------------------------------------------
 ' MODULE FOR STRINGS LOCALIZATION
 ' Here are all the messages used throught the
@@ -68,3 +67,4 @@ Public Const str_historyEditedWorker = "Mitarbeiter-Nr. {0} wurde bearbeiten"
 Public Const str_resetAbsenceStatus = "DER ABWESENHEITPLAN WURDE ZURÜCKGESETZT"
 Public Const str_resetWorkerList = "DIE MITARBEITERLISTE WURDE GELÖSCHT"
 Public Const str_resetShiftplan = "DER SCHICHTPLAN WURDE ZURÜCKGESETZT"
+

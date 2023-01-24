@@ -1,4 +1,3 @@
-Attribute VB_Name = "Globals"
 ' --------------------------------------------
 ' MODULE FOR GLOBAL VARIABLES
 ' Here are all the variables that are used

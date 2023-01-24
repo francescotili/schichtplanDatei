@@ -1,18 +1,3 @@
-VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ResetFile 
-   Caption         =   "Datei zur�cksetzen"
-   ClientHeight    =   2700
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   4050
-   OleObjectBlob   =   "ResetFile.frx":0000
-   StartUpPosition =   1  'CenterOwner
-End
-Attribute VB_Name = "ResetFile"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = False
 Private Sub JahrTextbox_Change()
   If (JahrTextbox.Value >= 1900) And (JahrTextbox.Value < 2300) Then
     Proceed.Enabled = True
@@ -65,3 +50,4 @@ Private Sub UserForm_Initialize()
 '  Vacation_Check.Value = True
 '  Shifts_Check.Value = True
 End Sub
+
