@@ -98,7 +98,7 @@ Private Sub AbsenceDataLoad()
   
   ' Get the days
   For i = 1 To 5
-    weekDates(i - 1) = DateAdd("ww", activeWeekCell.Value - 1, DateSerial(actualYearCell.Value, 1, 2 + i))
+    weekDates(i - 1) = 7 * (activeWeekCell.Value - 1) + DateSerial(actualYearCell.Value, 1, 4) - WeekDay(DateSerial(actualYearCell.Value, 1, 4), 2) + i
   Next i
   
   ' Get data and populate
