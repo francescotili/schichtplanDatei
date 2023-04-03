@@ -5,7 +5,7 @@
 ' --------------------------------------------
 
 ' Sheet 2
-Public Const str_sh2_losingDataWarn = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren." & vbCrLf & "Fortfahren?"
+'Public Const str_sh2_losingDataWarn = "Im Schichtplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren." & vbCrLf & "Fortfahren?"
 Public Const str_sh2_losingDataImport = "Für diese Woche gibt es bereits eine Pianifikation! Wenn Sie fortfahren, wird der Plan überschrieben." & vbCrLf & "Fortfahren?"
 Public Const str_sh2_savingWarn = "Möchten Sie den Schichtplan wirklich speichern?" & vbCrLf & "Vorhandene Daten der ganzen Kalenderwoche werden überschrieben!"
 Public Const str_sh2_moreAbsence = "Und {0} weitere"
@@ -17,7 +17,7 @@ Public Const str_sh2_errTodayYear = "Achtung!" & vbCrLf & "Heute ist ein anderes
 Public Const str_sh2_errCutMode = "Bitte NICHT ausschneiden (Strg+X), da dies zu Problemen auf dem Blatt führt! Verwenden Sie das normale Kopieren (Strg+C) und Einfügen (Strg+V), danke."
 
 ' Sheet 5
-Public Const str_sh5_losingDataWarn = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
+'Public Const str_sh5_losingDataWarn = "Im Abwesenheitplan wurden nicht gespeicherte änderungen erkannt!" & vbCrLf & "Wenn Sie fortfahren, gehen die verloren. Fortfahren?"
 Public Const str_sh5_newWorkerAdded = "Ein neuer Mitarbeiter wurde dem Plan hinzugefügt" & vbCrLf & "Mitarbeiter-Nr. {0}"
 Public Const str_sh5_workerDeleted = "Ein Mitarbeiter wurde aus dem Plan gelöscht" & vbCrLf & "Mitarbeiter-Nr. {0}"
 Public Const str_sh5_savingWarn = "Möchten Sie den Abwesenheitplan wirklich speichern?" & vbCrLf & "Vorhandene Daten werden überschrieben!"

@@ -30,14 +30,15 @@ End Sub
 Private Sub AbsenceDataLoad()
   Dim i, j As Long
   
-  If changesDetectedCell.Value = True Then
-    answer = MsgBox(str_sh5_losingDataWarn, vbExclamation + vbYesNo, "ACHTUNG")
-    If answer = vbYes Then GoTo Proceed Else GoTo Abort
-  Else
-    GoTo Proceed
-  End If
+  ' Code commented to avoid data corruption when the user decide to not load data
+  'If changesDetectedCell.Value = True Then
+  '  answer = MsgBox(str_sh5_losingDataWarn, vbExclamation + vbYesNo, "ACHTUNG")
+  '  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  'Else
+  '  GoTo Proceed
+  'End If
 
-Proceed:
+'Proceed:
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
@@ -128,7 +129,7 @@ Proceed:
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword, AllowFormattingCells:=True
 
-Abort:
+'Abort:
 End Sub
 
 Private Sub Sh5_PlanSaveBtn_Click()

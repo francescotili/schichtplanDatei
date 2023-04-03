@@ -34,14 +34,15 @@ Public Sub Worksheet_Activate()
 End Sub
 
 Public Sub WeekDataLoad()
-  If changesDetectedCell.Value = True Then
-    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
-    If answer = vbYes Then GoTo Proceed Else GoTo Abort
-  Else
-    GoTo Proceed
-  End If
+  ' Code commented to avoid data corruption when the user decide to not load data
+  'If changesDetectedCell.Value = True Then
+  '  answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
+  '  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  'Else
+  '  GoTo Proceed
+  'End If
 
-Proceed:
+'Proceed:
   ' Disable screen updating and protection
   Application.ScreenUpdating = False
   sheet.Unprotect Password:=GAdminPassword
@@ -67,7 +68,7 @@ Proceed:
   ' Enable screen Updating and protection
   Application.ScreenUpdating = True
   sheet.Protect Password:=GAdminPassword
-Abort:
+'Abort:
 End Sub
 
 Private Sub AbsenceDataLoad()
@@ -274,13 +275,14 @@ Private Sub Populate(passedDay As WeekDays)
 End Sub
 
 Public Sub ToggleMode()
-  If changesDetectedCell.Value = True Then
-    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
-    If answer = vbYes Then GoTo ToggleMode Else GoTo NoToggle
-  Else
-    GoTo ToggleMode
-  End If
-ToggleMode:
+  ' Code commented to avoid data corruption when the user decide to not load data
+  'If changesDetectedCell.Value = True Then
+  '  answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
+  '  If answer = vbYes Then GoTo ToggleMode Else GoTo NoToggle
+  'Else
+  '  GoTo ToggleMode
+  'End If
+'ToggleMode:
   Select Case weekStatusCell.Value
     Case WeekStatus.Emtpy
       SetCustomMode
@@ -289,7 +291,7 @@ ToggleMode:
     Case WeekStatus.Custom
       SetNormalMode
   End Select
-NoToggle:
+'NoToggle:
 End Sub
 
 Private Sub SetNormalMode()
@@ -321,33 +323,35 @@ Private Sub SetEmptyMode()
 End Sub
 
 Public Sub GoToNextDay()
-  If changesDetectedCell.Value = True Then
-    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
-    If answer = vbYes Then GoTo Proceed Else GoTo Abort
-  Else
-    GoTo Proceed
-  End If
-Proceed:
+  ' Code commented to avoid data corruption when the user decide to not load data
+  'If changesDetectedCell.Value = True Then
+  '  answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
+  '  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  'Else
+  '  GoTo Proceed
+  'End If
+'Proceed:
   activeDayCell.Value = activeDayCell.Value + 1
   If activeDayCell.Value > WeekDays.Monday Then prevDayBtn.Visible = msoTrue
   If activeDayCell.Value = WeekDays.Friday Then nextDayBtn.Visible = msoFalse
   Populate activeDayCell.Value
-Abort:
+'Abort:
 End Sub
 
 Public Sub GoToPreviousDay()
-  If changesDetectedCell.Value = True Then
-    answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
-    If answer = vbYes Then GoTo Proceed Else GoTo Abort
-  Else
-    GoTo Proceed
-  End If
-Proceed:
+  ' Code commented to avoid data corruption when the user decide to not load data
+  'If changesDetectedCell.Value = True Then
+  '  answer = MsgBox(str_sh2_losingDataWarn, vbExclamation + vbYesNo, str_warnBoxTitle)
+  '  If answer = vbYes Then GoTo Proceed Else GoTo Abort
+  'Else
+  '  GoTo Proceed
+  'End If
+'Proceed:
   activeDayCell.Value = activeDayCell.Value - 1
   If activeDayCell.Value = WeekDays.Monday Then prevDayBtn.Visible = msoFalse
   If activeDayCell.Value < WeekDays.Friday Then nextDayBtn.Visible = msoTrue
   Populate activeDayCell.Value
-Abort:
+'Abort:
 End Sub
 
 Private Sub EmptyPlan()
