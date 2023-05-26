@@ -12,6 +12,7 @@ Private weekToLoadCell, weekStatusCell, activeDayCell, actualYearCell, activeWee
 
 Private Sub Sh2_WeekSaveBtn_Click()
   WeekDataSave
+  ResetConditionalFormatting
   Range(lastUsedCell.Value).Select
 End Sub
 
@@ -498,4 +499,291 @@ Public Sub PreviousWeekLoad()
   Else
     MsgBox str_sh2_errPrevYear
   End If
+End Sub
+
+Private Sub ResetConditionalFormatting()
+  Dim bigRange, stanzRange, qualiRange, lagerRange, bueroRange, galvaRange, instRange, elektroRange As Range
+
+  ' Disable screen updating and protection
+  Application.ScreenUpdating = False
+  sheet.Unprotect Password:=GAdminPassword
+
+  ' Define ranges for every section
+  Set bigRange = Range("G7:J105")
+  Set stanzRange = Range("G7:J39")
+  Set qualiRange = Range("G40:J45")
+  Set lagerRange = Range("G46:J51")
+  Set bueroRange = Range("G52:J66")
+  Set galvaRange = Range("G67:J84")
+  Set instRange = Range("G85:J102")
+  Set elektroRange = Range("G103:J105")
+
+  ' Delete preexistent conditional formatting
+  bigRange.FormatConditions.Delete
+
+  ' Add italic style for extern employees
+  With bigRange
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=NOT(ISNUMBER(MATCH(G7;INDIRECT(""MitarbeiterList[Abkürzung]"");0)))"
+    With .FormatConditions(1)
+      .Font.Bold = False
+      .Font.Italic = True
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Stanzerei
+  With stanzRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G7;$L$7:$L$105;0);0)+IFNA(MATCH(G7;$M$7:$M$105;0);0)+IFNA(MATCH(G7;$N$7:$N$105;0);0)+IFNA(MATCH(G7;$O$7:$O$105;0);0)+IFNA(MATCH(G7;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorAccent6
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0.599963377788629
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G7<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorAccent6
+        .TintAndShade = -0.499984740745262
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 10
+        .TintAndShade = -0.249946592608417
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent6
+        .TintAndShade = 0.599963377788629
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Qualität
+  With qualiRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G40;$L$7:$L$105;0);0)+IFNA(MATCH(G40;$M$7:$M$105;0);0)+IFNA(MATCH(G40;$N$7:$N$105;0);0)+IFNA(MATCH(G40;$O$7:$O$105;0);0)+IFNA(MATCH(G40;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorAccent4
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0.799981688894314
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G40<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorAccent4
+        .TintAndShade = -0.499984740745262
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 8
+        .TintAndShade = -0.249946592608417
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent4
+        .TintAndShade = 0.799981688894314
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Lager
+  With lagerRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G46;$L$7:$L$105;0);0)+IFNA(MATCH(G46;$M$7:$M$105;0);0)+IFNA(MATCH(G46;$N$7:$N$105;0);0)+IFNA(MATCH(G46;$O$7:$O$105;0);0)+IFNA(MATCH(G46;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorLight2
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0.799981688894314
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G46<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorLight2
+        .TintAndShade = -0.499984740745262
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 4
+        .TintAndShade = 0
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorLight2
+        .TintAndShade = 0.799981688894314
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Büro
+  With bueroRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G52;$L$7:$L$105;0);0)+IFNA(MATCH(G52;$M$7:$M$105;0);0)+IFNA(MATCH(G52;$N$7:$N$105;0);0)+IFNA(MATCH(G52;$O$7:$O$105;0);0)+IFNA(MATCH(G52;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorDark1
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = -0.14996795556505
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G52<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorDark2
+        .TintAndShade = -0.749961851863155
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 3
+        .TintAndShade = -0.749961851863155
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark2
+        .TintAndShade = -9.99481185338908E-02
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Galvanik
+  With galvaRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G67;$L$7:$L$105;0);0)+IFNA(MATCH(G67;$M$7:$M$105;0);0)+IFNA(MATCH(G67;$N$7:$N$105;0);0)+IFNA(MATCH(G67;$O$7:$O$105;0);0)+IFNA(MATCH(G67;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorAccent2
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0.799981688894314
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G67<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorAccent2
+        .TintAndShade = -0.499984740745262
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 6
+        .TintAndShade = 0
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent2
+        .TintAndShade = 0.799981688894314
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Instandsetzung
+  With instRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G85;$L$7:$L$105;0);0)+IFNA(MATCH(G85;$M$7:$M$105;0);0)+IFNA(MATCH(G85;$N$7:$N$105;0);0)+IFNA(MATCH(G85;$O$7:$O$105;0);0)+IFNA(MATCH(G85;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternThemeColor = xlThemeColorAccent1
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0.799981688894314
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G85<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .ThemeColor = xlThemeColorAccent1
+        .TintAndShade = -0.499984740745262
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .ThemeColor = 5
+        .TintAndShade = 0
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent1
+        .TintAndShade = 0.799981688894314
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Add conditional formatting for Elektriker
+  With elektroRange
+    ' Add patterned background for employees that has absences
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=IFNA(MATCH(G103;$L$7:$L$105;0);0)+IFNA(MATCH(G103;$M$7:$M$105;0);0)+IFNA(MATCH(G103;$N$7:$N$105;0);0)+IFNA(MATCH(G103;$O$7:$O$105;0);0)+IFNA(MATCH(G103;$P$7:$P$105;0);0)>0"
+    With .FormatConditions(2)
+      .Interior.Pattern = xlUp
+      .Interior.PatternColor = 16309751
+      .Interior.ColorIndex = xlAutomatic
+      .Interior.PatternTintAndShade = 0
+      .StopIfTrue = False
+    End With
+
+    ' Add fill for employees
+    .FormatConditions.Add Type:=xlExpression, Formula1:="=G103<>"""""
+    With .FormatConditions(3)
+      With .Font
+        .Bold = True
+        .Italic = False
+        .Color = -8840844
+        .TintAndShade = 0
+      End With
+      With .Borders
+        .LineStyle = xlContinuous
+        .Color = -8840844
+        .TintAndShade = 0
+        .Weight = xlThin
+      End With
+      With .Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 16309751
+        .TintAndShade = 0
+      End With
+      .StopIfTrue = False
+    End With
+  End With
+
+  ' Enable screen Updating and protection
+  Application.ScreenUpdating = True
+  sheet.Protect Password:=GAdminPassword
 End Sub
